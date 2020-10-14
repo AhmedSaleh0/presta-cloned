@@ -1063,7 +1063,7 @@
   ),
   'Carrier' => 
   array (
-    'path' => '',
+    'path' => 'override/classes/Carrier.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -1099,7 +1099,7 @@
   ),
   'Cart' => 
   array (
-    'path' => '',
+    'path' => 'override/classes/Cart.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -1687,7 +1687,7 @@
   ),
   'CustomerThread' => 
   array (
-    'path' => '',
+    'path' => 'override/classes/CustomerThread.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -2713,7 +2713,7 @@
   ),
   'Order' => 
   array (
-    'path' => '',
+    'path' => 'override/classes/order/Order.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -3055,8 +3055,8 @@
   ),
   'PaymentModule' => 
   array (
-    'path' => '',
-    'type' => 'abstract class',
+    'path' => 'override/classes/PaymentModule.php',
+    'type' => 'class',
     'override' => false,
   ),
   'PaymentModuleCore' => 

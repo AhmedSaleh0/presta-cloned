@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.33, created on 2020-10-09 16:13:25
+/* Smarty version 3.1.33, created on 2020-10-14 16:25:34
   from 'module:pscustomeraccountlinkspsc' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.33',
-  'unifunc' => 'content_5f80700578a2a4_89856754',
+  'unifunc' => 'content_5f870a5e41ac37_21988850',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -18,7 +18,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 31536000,
 ),true)) {
-function content_5f80700578a2a4_89856754 (Smarty_Internal_Template $_smarty_tpl) {
+function content_5f870a5e41ac37_21988850 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, array (
 ));
 ?>
@@ -58,7 +58,14 @@ $_smarty_tpl->smarty->ext->_tplFunction->registerTplFunctions($_smarty_tpl, arra
             Addresses
           </a>
         </li>
-        
+            <li class="ets_ws_accountlink col-lg-4 col-md-6 col-sm-6 col-xs-12">
+    	<a href="http://18.185.239.151/en/seller-application" >
+            <span class="link-item">
+                Become a Seller
+            </span>
+    	</a>
+    </li>
+
 	</ul>
 </div>
 <?php }

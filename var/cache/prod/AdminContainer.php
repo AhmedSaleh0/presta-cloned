@@ -1182,6 +1182,7 @@ class AdminContainer extends Container
                 58 => 'ps_buybuttonlite',
                 59 => 'blockreassurance',
                 60 => 'ps_facetedsearch',
+                61 => 'ets_marketplace',
             ],
             'ps_cache_dir' => '/opt/bitnami/apache/htdocs/var/cache/prod/',
             'mail_themes_uri' => '/mails/themes',
