@@ -6,6 +6,14 @@
     <language>en</language>
      <atom:link href="https://www.prestashop.com/en/blog/feed.xml" rel="self" type="application/rss+xml" />
       <item>
+    <title>Sales, Promotions, Clearance: How To Animate Your Sales All Year?</title>
+    <link>https://www.prestashop.com/en/blog/animate-sales-all-year</link>
+    <description>Throughout the year, ecommerce businesses utilize various sales techniques that help them turn their prospects into regular customers &amp;amp; also in retaining the existing customers.</description>
+     <pubDate>Wed, 14 Oct 2020 16:44:51 +0200</pubDate>
+ <dc:creator>NitinSrivastavaen</dc:creator>
+ <guid isPermaLink="false">https://www.prestashop.com/en/blog/animate-sales-all-year</guid>
+  </item>
+  <item>
     <title>PrestaShop Metrics, the new analytics tool built to centralize all ecommerce data</title>
     <link>https://www.prestashop.com/en/blog/prestashop-metrics</link>
     <description>In ecommerce, perhaps even more than any other sector, data and the information it provides are essential for managing businesses.</description>
@@ -76,14 +84,6 @@
      <pubDate>Wed, 09 Sep 2020 15:17:14 +0200</pubDate>
  <dc:creator>Aaron Wiseman</dc:creator>
  <guid isPermaLink="false">https://www.prestashop.com/en/blog/email-marketing-holiday</guid>
-  </item>
-  <item>
-    <title>Vulnerability identified on a few PrestaShop modules and themes</title>
-    <link>https://www.prestashop.com/en/blog/vulnerability-september-2020</link>
-    <description>An attack against a few PrestaShop stores was reported to us.</description>
-     <pubDate>Wed, 09 Sep 2020 15:16:51 +0200</pubDate>
- <dc:creator>PrestaShop Team</dc:creator>
- <guid isPermaLink="false">https://www.prestashop.com/en/blog/vulnerability-september-2020</guid>
   </item>
   </channel>
 </rss>
