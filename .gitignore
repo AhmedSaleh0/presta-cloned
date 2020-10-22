@@ -216,3 +216,5 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+app/config/parameters.php
+app/config/parameters.php
