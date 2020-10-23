@@ -18,7 +18,8 @@
 *  @license    Valid for 1 website (or project) for each purchase of license
 *  International Registered Trademark & Property of ETS-Soft
 *}
-{if !$require_registration || ($registration && $registration->active==1)||$seller} 
+
+{if !$require_registration || ($registration && $registration->active==1)||$seller}
     <li class="ets_ws_accountlink col-lg-4 col-md-6 col-sm-6 col-xs-12">
     	<a href="{$link->getModuleLink('ets_marketplace','myseller')|escape:'html':'UTF-8'}">
             <span class="link-item">
