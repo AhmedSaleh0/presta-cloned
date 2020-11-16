@@ -5,9 +5,9 @@
  * NOTICE OF LICENSE
  *
  * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+ * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
  * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- * 
+ *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -68,10 +68,10 @@ class Ets_mp_commission extends ObjectModel
             'id_order' => array('type' => self::TYPE_STRING),
             'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'id_product' => array('type' => self::TYPE_STRING,),
-            'id_product_attribute' =>	array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),  
-            'product_name'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
-            'price'  => array('type' => self::TYPE_STRING, 'validate' => 'isPrice'), 
-            'price_tax_incl' => array('type' =>   self::TYPE_FLOAT,'validate' => 'isPrice'),   
+            'id_product_attribute' =>	array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
+            'product_name'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+            'price'  => array('type' => self::TYPE_STRING, 'validate' => 'isPrice'),
+            'price_tax_incl' => array('type' =>   self::TYPE_FLOAT,'validate' => 'isPrice'),
             'quantity' => array('type'=> self::TYPE_STRING),
             'total_price' => array('type' => self::TYPE_FLOAT,'validate' =>'isPrice'),
             'total_price_tax_incl' => array('type' => self::TYPE_FLOAT,'validate' =>'isPrice'),
@@ -125,7 +125,7 @@ class Ets_mp_commission extends ObjectModel
                 {
                     $this->context->cookie->success_message = $this->l('Approved successfully');
                     $this->context->cookie->write();
-                    
+
                 }
             }
             Tools::redirectAdmin($this->context->link->getAdminLink(Tools::getValue('controller')).(Tools::isSubmit('viewseller')? '&viewseller=1&id_seller='.(int)Tools::getValue('id_seller'):''));
@@ -227,9 +227,9 @@ class Ets_mp_commission extends ObjectModel
                 'sort' => true,
                 'filter' => true,
                 'strip_tag' => false,
-            ),            
+            ),
             'status' => array(
-                'title' => $this->l('Status'), 
+                'title' => $this->l('Status'),
                 'type' => 'select',
                 'sort' => true,
                 'filter' => true,
@@ -334,7 +334,7 @@ class Ets_mp_commission extends ObjectModel
                 {
                     $filter .=' AND sc.type="commission" AND sc.status = "'.(int)Tools::getValue('status').'"';
                 }
-                
+
                 $show_resset = true;
             }
             if(trim(Tools::getValue('date_add_min')))
@@ -388,12 +388,12 @@ class Ets_mp_commission extends ObjectModel
                     break;
             }
             if($sort && ($sort_type=Tools::getValue('sort_type','desc')) && in_array($sort_type,array('asc','desc')))
-                $sort .= ' '.trim($sort_type);  
+                $sort .= ' '.trim($sort_type);
         }
         //Paggination
         $page = (int)Tools::getValue('page') && (int)Tools::getValue('page') > 0 ? (int)Tools::getValue('page') : 1;
         $totalRecords = (int) $module->getSellerCommissions($filter,$having,0,0,'',true);
-        $paggination = new Ets_mp_paggination_class();            
+        $paggination = new Ets_mp_paggination_class();
         $paggination->total = $totalRecords;
         $paggination->url = $this->context->link->getAdminLink(Tools::getValue('controller')).'&page=_page_'.(Tools::isSubmit('viewseller') && Tools::getValue('id_seller') ? '&viewseller=1&id_seller='.(int)Tools::getValue('id_seller'):'').$module->getFilterParams($fields_list,'ms_commissions');
         $paggination->limit =  20;
@@ -409,9 +409,9 @@ class Ets_mp_commission extends ObjectModel
         {
             foreach($commissions as &$commission)
             {
-                $commission['price'] = $commission['price_tax_incl']!=0 ? Tools::displayPrice($commission['price_tax_incl']):'';  
-                  
-                $commission['commission'] = Tools::displayPrice($commission['commission']);  
+                $commission['price'] = $commission['price_tax_incl']!=0 ? Tools::displayPrice($commission['price_tax_incl']):'';
+
+                $commission['commission'] = Tools::displayPrice($commission['commission']);
                 if($commission['id_product'] && $commission['admin_earning'])
                     $commission['admin_earning'] = Tools::displayPrice($commission['admin_earning']);
                 else
@@ -434,7 +434,7 @@ class Ets_mp_commission extends ObjectModel
                 {
                     $commission['id'] = 'C-'.$commission['id'];
                     if($commission['status']==-1)
-                        $commission['status'] = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending','commissions').'<'.'/'.'span'.'>'; 
+                        $commission['status'] = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending','commissions').'<'.'/'.'span'.'>';
                     elseif($commission['status']==0)
                         $commission['status'] = '<'.'span'.' class="ets_mp_status canceled">'.$this->l('Canceled','commissions').'<'.'/'.'span'.'>';
                     elseif($commission['status']==1)
@@ -446,11 +446,11 @@ class Ets_mp_commission extends ObjectModel
                 }
                 if($commission['id_customer_seller'])
                 {
-                    $commission['seller_name'] = '<'.'a hr'.'ef="'.$module->getLinkCustomerAdmin($commission['id_customer_seller']).'">'.$commission['seller_name'].'<'.'/'.'a'.'>'; 
+                    $commission['seller_name'] = '<'.'a hr'.'ef="'.$module->getLinkCustomerAdmin($commission['id_customer_seller']).'">'.$commission['seller_name'].'<'.'/'.'a'.'>';
                 }
                 else
                     $commission['seller_name'] = '<'.'sp'.'an class="row_deleted">'.$this->l('Seller deleted').'<'.'/'.'span'.'>';
-                                   
+
             }
         }
         $paggination->text =  $this->l('Showing {start} to {end} of {total} ({pages} Pages)');
@@ -474,7 +474,7 @@ class Ets_mp_commission extends ObjectModel
             'sort'=> Tools::getValue('sort','date_add'),
             'show_add_new'=> false,
             'sort_type' => Tools::getValue('sort_type','desc'),
-        );           
+        );
         return $module->renderList($listData);
     }
     public function l($string)
@@ -540,10 +540,10 @@ class Ets_mp_commission extends ObjectModel
                         );
                         Ets_marketplace::sendMail('to_admin_commission_canceled',$data,'',$subjects);
                     }
-                    
+
                 }
             }
-            
+
         }
         return $result;
     }
@@ -557,7 +557,7 @@ class Ets_mp_commission extends ObjectModel
         if($res && (Configuration::get('ETS_MP_EMAIL_ADMIN_COMMISSION_CREATED')||Configuration::get('ETS_MP_EMAIL_ADMIN_COMMISSION_CREATED')))
         {
             if($this->status==-1)
-                $status = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending').'<'.'/'.'span'.'>'; 
+                $status = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending').'<'.'/'.'span'.'>';
             elseif($this->status==0)
                 $status = '<'.'span'.' class="ets_mp_status canceled">'.$this->l('Canceled').'<'.'/'.'span'.'>';
             elseif($this->status==1)
@@ -575,7 +575,7 @@ class Ets_mp_commission extends ObjectModel
                 '{status}' => $status,
             );
             if(Configuration::get('ETS_MP_EMAIL_SELLER_COMMISSION_CREATED'))
-            {  
+            {
                 $subjects = array(
                     'translation' => $this->l('New seller commission has been created'),
                     'origin'=> 'New seller commission has been created',
@@ -591,7 +591,7 @@ class Ets_mp_commission extends ObjectModel
                     'specific'=>'commission'
                 );
                 Ets_marketplace::sendMail('to_admin_commission_created_for_seller',$data,'',$subjects);
-                
+
             }
         }
         return $res;

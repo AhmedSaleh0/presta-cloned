@@ -24,7 +24,7 @@ class PaymentModule extends PaymentModuleCore
 {
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:21
+    * date: 2020-10-23 15:09:25
     * version: 3.0.5
     */
     protected function createOrderFromCart(
@@ -62,7 +62,7 @@ class PaymentModule extends PaymentModuleCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:21
+    * date: 2020-10-23 15:09:25
     * version: 3.0.5
     */
     public function validateOrder(
@@ -615,7 +615,7 @@ class PaymentModule extends PaymentModuleCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:21
+    * date: 2020-10-23 15:09:25
     * version: 3.0.5
     */
     protected function createOrderFromCartDefault(

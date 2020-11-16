@@ -23,7 +23,7 @@ class Order extends OrderCore
 {
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:22
+    * date: 2020-10-23 15:09:23
     * version: 3.0.5
     */
     public function __construct($id = null, $id_lang = null)
@@ -60,7 +60,7 @@ class Order extends OrderCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:22
+    * date: 2020-10-23 15:09:23
     * version: 3.0.5
     */
     public function getProductsDetail()
@@ -83,7 +83,7 @@ class Order extends OrderCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:22
+    * date: 2020-10-23 15:09:23
     * version: 3.0.5
     */
     public static function getIdByCartId($id_cart)

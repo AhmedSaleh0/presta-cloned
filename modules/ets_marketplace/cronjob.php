@@ -5,9 +5,9 @@
  * NOTICE OF LICENSE
  *
  * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+ * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
  * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- * 
+ *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -20,7 +20,7 @@
  *  International Registered Trademark & Property of ETS-Soft
  */
 
-include(dirname(__FILE__).'/../../config/config.inc.php'); 
+include(dirname(__FILE__).'/../../config/config.inc.php');
 require_once(dirname(__FILE__).'/../../init.php');
 require_once(dirname(__FILE__).'/ets_marketplace.php');
 $token = Tools::getValue('secure', false);

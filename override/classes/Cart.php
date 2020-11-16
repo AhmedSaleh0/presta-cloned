@@ -23,7 +23,7 @@ class Cart extends CartCore
 {
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:19
+    * date: 2020-10-23 15:09:23
     * version: 3.0.5
     */
     public function getPackageShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null, $id_zone = null)
@@ -60,7 +60,7 @@ class Cart extends CartCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:19
+    * date: 2020-10-23 15:09:23
     * version: 3.0.5
     */
     public function getPackageList($flush = false)

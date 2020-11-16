@@ -24,7 +24,7 @@ class CustomerThread extends CustomerThreadCore
 {
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:21
+    * date: 2020-10-23 15:09:24
     * version: 3.0.5
     */
     public static function getCustomerMessagesOrder($id_customer, $id_order)

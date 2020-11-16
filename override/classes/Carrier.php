@@ -24,7 +24,7 @@ class Carrier extends CarrierCore
 {
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:20
+    * date: 2020-10-23 15:09:24
     * version: 3.0.5
     */
     public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
@@ -213,7 +213,7 @@ class Carrier extends CarrierCore
     }
     /*
     * module: ets_marketplace
-    * date: 2020-10-14 16:18:20
+    * date: 2020-10-23 15:09:24
     * version: 3.0.5
     */
     public static function getProductsBySellerInCart($products,$id_product)
