@@ -1,11 +1,11 @@
 <?php return array (
   'parameters' =>
   array (
-    'database_host' => 'ls-2f1cc7df5cd48527a120f274c8e20474425aa4f5.c7bprcyuax2x.eu-central-1.rds.amazonaws.com',
+    'database_host' => 'localhost',
     'database_port' => '',
     'database_name' => 'prestashop',
-    'database_user' => 'dbmasteruser',
-    'database_password' => 'Z>=a3;*M7<mP_qN,jf}k6S8a[$TV>v+V',
+    'database_user' => 'root',
+    'database_password' => '',
     'database_prefix' => 'ps_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',
