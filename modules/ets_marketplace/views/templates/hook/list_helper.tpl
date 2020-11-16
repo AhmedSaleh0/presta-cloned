@@ -4,9 +4,9 @@
 * NOTICE OF LICENSE
 *
 * This file is not open source! Each license that you purchased is only available for 1 wesite only.
-* If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+* If you want to use this file on more websites (or projects), you need to purchase additional licenses.
 * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
-* 
+*
 * DISCLAIMER
 *
 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -25,33 +25,40 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
     <div class="panel-heading">{*if isset($icon) && $icon}<i class="{$icon|escape:'html':'UTF-8'}"></i>&nbsp;{/if*}{$title nofilter}
         {if isset($totalRecords) && $totalRecords>0}<span class="badge">{$totalRecords|intval}</span>{/if}
         <span class="panel-heading-action">
-            {if isset($show_add_new) && $show_add_new}            
+            {if isset($show_add_new) && $show_add_new}
                 <a class="list-toolbar-btn add_new_link" href="{if isset($link_new)}{$link_new|escape:'html':'UTF-8'}{else}{$currentIndex|escape:'html':'UTF-8'}{/if}">
                     <span data-placement="top" data-html="true" data-original-title="{l s='Add new' mod='ets_marketplace'}" class="label-tooltip" data-toggle="tooltip" title="">
         				<i class="process-icon-new"></i> {l s='Add new' mod='ets_marketplace'}
                     </span>
-                </a>            
+                </a>
             {/if}
-            {if isset($preview_link) && $preview_link}            
+            {if isset($preview_link) && $preview_link}
                 <a target="_blank" class="list-toolbar-btn" href="{$preview_link|escape:'html':'UTF-8'}">
                     <span data-placement="top" data-html="true" data-original-title="{l s='Preview ' mod='ets_marketplace'} ({$title|escape:'html':'UTF-8'})" class="label-tooltip" data-toggle="tooltip" title="">
         				<i style="margin-left: 5px;" class="icon-search-plus"></i>
                     </span>
-                </a>            
+                </a>
             {/if}
-            {if isset($link_export) && $link_export}            
+            {if isset($link_export) && $link_export}
                 <a  class="list-toolbar-btn" href="{$link_export|escape:'html':'UTF-8'}">
                     <span data-placement="top" data-html="true" data-original-title="{l s='Export ' mod='ets_marketplace'} ({$title|escape:'html':'UTF-8'})" class="label-tooltip" data-toggle="tooltip" title="">
         				<i style="margin-left: 5px;" class="icon icon-import fa fa-import"></i> {l s='Export' mod='ets_marketplace'}
                     </span>
-                </a>            
+                </a>
             {/if}
-            {if isset($link_import) && $link_import}            
+            {if isset($link_import) && $link_import}
                 <a class="list-toolbar-btn" href="{$link_import|escape:'html':'UTF-8'}">
                     <span data-placement="top" data-html="true" data-original-title="{l s='Import ' mod='ets_marketplace'} ({$title|escape:'html':'UTF-8'})" class="label-tooltip" data-toggle="tooltip" title="">
         				<i style="margin-left: 5px;" class="icon icon-export fa fa-export"></i> {l s='Import' mod='ets_marketplace'}
                     </span>
-                </a>            
+                </a>
+            {/if}
+            {if isset($link_update) && $link_update}
+                <a class="list-toolbar-btn" href="{$link_update|escape:'html':'UTF-8'}">
+                    <span data-placement="top" data-html="true" data-original-title="{l s='Import ' mod='ets_marketplace'} ({$title|escape:'html':'UTF-8'})" class="label-tooltip" data-toggle="tooltip" title="">
+                        <i style="margin-left: 5px;" class="icon icon-clone fa fa-clone"></i> {l s='Update' mod='ets_marketplace'}
+                    </span>
+                </a>
             {/if}
         </span>
     </div>
@@ -73,8 +80,8 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                             </span>
                                          {/if}
                                     </span>
-                                </th>  
-                                {assign var ='i' value=$i+1}                          
+                                </th>
+                                {assign var ='i' value=$i+1}
                             {/foreach}
                             {if $show_action && $actions}
                                 <th style="text-align: center;">{l s='Action' mod='ets_marketplace'}</th>
@@ -98,14 +105,14 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                             <option {if ($field.active!=='' && $field.active==$option.$id_option) || ($field.active=='' && $index=='has_post' && $option.$id_option==1 )} selected="selected"{/if} value="{$option.$id_option|escape:'html':'UTF-8'}">{$option.$value|escape:'html':'UTF-8'}</option>
                                                         {/foreach}
                                                     {/if}
-                                                </select>                                            
+                                                </select>
                                             {/if}
                                             {if $field.type=='int'}
                                                 <label for="{$index|escape:'html':'UTF-8'}_min"><input type="text" placeholder="{l s='Min' mod='ets_marketplace'}" name="{$index|escape:'html':'UTF-8'}_min" value="{$field.active.min|escape:'html':'UTF-8'}" /></label>
                                                 <label for="{$index|escape:'html':'UTF-8'}_max"><input type="text" placeholder="{l s='Max' mod='ets_marketplace'}" name="{$index|escape:'html':'UTF-8'}_max" value="{$field.active.max|escape:'html':'UTF-8'}" /></label>
                                             {/if}
                                             {if $field.type=='date'}
-                                                <fieldset class="form-group"> 
+                                                <fieldset class="form-group">
                                                     <div class="input-group ets_mp_datepicker">
                                                         <input id="{$index|escape:'html':'UTF-8'}_min" class="form-control" name="{$index|escape:'html':'UTF-8'}_min" placeholder="{l s='From' mod='ets_marketplace'}" value="{$field.active.min|escape:'html':'UTF-8'}" type="text" />
                                                         <div class="input-group-append">
@@ -115,7 +122,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                         </div>
                                                     </div>
                                                 </fieldset>
-                                                <fieldset class="form-group"> 
+                                                <fieldset class="form-group">
                                                     <div class="input-group ets_mp_datepicker">
                                                         <input id="{$index|escape:'html':'UTF-8'}_max" class="form-control" name="{$index|escape:'html':'UTF-8'}_max" placeholder="{l s='To' mod='ets_marketplace'}" value="{$field.active.max|escape:'html':'UTF-8'}" type="text" />
                                                         <div class="input-group-append">
@@ -157,7 +164,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                         {foreach from=$field_values item='row'}
                             <tr {if isset($row.read) && !$row.read}class="no-read"{/if} data-id="{$row.$identifier|intval}">
                                 {assign var='i' value=1}
-                                {foreach from=$fields_list item='field' key='key'}                             
+                                {foreach from=$fields_list item='field' key='key'}
                                     <td class="{$key|escape:'html':'UTF-8'} {if isset($sort)&& $sort==$key && isset($sort_type) && $sort_type=='asc' && isset($field.update_position) && $field.update_position}pointer dragHandle center{/if}{if isset($field.class)} {$field.class|escape:'html':'UTF-8'}{/if}" {if $show_action && !$actions && count($fields_list)==$i}colspan="2"{/if} >
                                         {if isset($field.rating_field) && $field.rating_field}
                                             {if isset($row.$key) && $row.$key > 0}
@@ -170,7 +177,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                     {/for}
                                                 {/if}
                                             {else}
-                                            
+
                                                 {l s=' -- ' mod='ets_marketplace'}
                                             {/if}
                                         {elseif $field.type != 'active'}
@@ -192,12 +199,12 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                 {if isset($row.$key) && $row.$key!=='' && !is_array($row.$key)}{if isset($field.strip_tag) && !$field.strip_tag}{$row.$key nofilter}{else}{$row.$key|strip_tags:'UTF-8'|truncate:120:'...'|escape:'html':'UTF-8'}{/if}{else}--{/if}
                                                 {if isset($row.$key) && is_array($row.$key) && isset($row.$key.image_field) && $row.$key.image_field}
                                                     <a class="ets_mp_fancy" href="{$row.$key.img_url|escape:'html':'UTF-8'}"><img style="{if isset($row.$key.height) && $row.$key.height}max-height: {$row.$key.height|intval}px;{/if}{if isset($row.$key.width) && $row.$key.width}max-width: {$row.$key.width|intval}px;{/if}" src="{$row.$key.img_url|escape:'html':'UTF-8'}" /></a>
-                                                {/if} 
+                                                {/if}
                                                 {if isset($field.update_position) && $field.update_position}
                                                     </div>
                                                     </span>
-                                                {/if}  
-                                            {/if}                                     
+                                                {/if}
+                                            {/if}
                                         {else}
                                             {if isset($row.$key) && $row.$key}
                                                 {if $row.$key==-1}
@@ -229,14 +236,14 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                         <i class="fa fa-remove"></i>
                                                     </span>
                                                 {/if}
-                                            {/if} 
+                                            {/if}
                                         {/if}
                                     </td>
                                     {assign var='i' value=$i+1}
                                 {/foreach}
                                 {if $show_action}
-                                    {if $actions}  
-                                        <td class="text-right">                            
+                                    {if $actions}
+                                        <td class="text-right">
                                             <div class="btn-group-action">
                                                 <div class="btn-group pull-right">
                                                         {if $actions[0]=='view'}
@@ -341,7 +348,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                                                         <i class="icon-save"></i> {l s='Save' mod='ets_marketplace'}
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>           
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                     <li>
@@ -372,7 +379,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                                                         <i class="icon-save"></i> {l s='Save' mod='ets_marketplace'}
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>           
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                     <li><a onclick="return confirm('{l s='Do you want to delete this item?' mod='ets_marketplace'}');" href="{$currentIndex|escape:'html':'UTF-8'}&{$identifier|escape:'html':'UTF-8'}={$row.$identifier|escape:'html':'UTF-8'}&del=yes"><i class="fa fa-trash icon-trash"></i> {l s='Delete' mod='ets_marketplace'}</a></li>
@@ -426,7 +433,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                                                         <i class="icon-save"></i> {l s='Save' mod='ets_marketplace'}
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>           
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                     <li {if $row.status_val!=-1} style="display:none;"{/if}>
@@ -457,7 +464,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                                                         <i class="icon-save"></i> {l s='Save' mod='ets_marketplace'}
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>           
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                     <li {if $row.status_val==0} style="display:none;"{/if}>
@@ -488,7 +495,7 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                                                                         <i class="icon-save"></i> {l s='Save' mod='ets_marketplace'}
                                                                                     </button>
                                                                                 </div>
-                                                                            </div>           
+                                                                            </div>
                                                                         </div>
                                                                     </li>
                                                                 {/if}
@@ -537,11 +544,11 @@ var text_update_position='{l s='Successful update' mod='ets_marketplace'}';
                                     {/if}
                                 {/if}
                             </tr>
-                        {/foreach}  
-                        {/if}  
+                        {/foreach}
+                        {/if}
                         {if !$field_values}
-                           <tr class="no-record not_items_found"> <td colspan="100%"><p>{l s='No items found' mod='ets_marketplace'}</p></td></tr> 
-                        {/if}                
+                           <tr class="no-record not_items_found"> <td colspan="100%"><p>{l s='No items found' mod='ets_marketplace'}</p></td></tr>
+                        {/if}
                     </tbody>
                 </table>
                 {if isset($has_delete_product) &&  ((isset($is_admin) && $is_admin) || (Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT') || (isset($has_edit_product) && $has_edit_product) || $has_delete_product))}

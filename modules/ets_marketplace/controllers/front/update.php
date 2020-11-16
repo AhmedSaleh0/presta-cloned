@@ -1,28 +1,8 @@
 <?php
-/**
- * 2007-2020 ETS-Soft
- *
- * NOTICE OF LICENSE
- *
- * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
- * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please contact us for extra customization service at an affordable price
- *
- *  @author ETS-Soft <etssoft.jsc@gmail.com>
- *  @copyright  2007-2020 ETS-Soft
- *  @license    Valid for 1 website (or project) for each purchase of license
- *  International Registered Trademark & Property of ETS-Soft
- */
 
-if (!defined('_PS_VERSION_'))
-	exit;
-class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
+if (!defined('_PS_VERSION_')) exit;
+
+class Ets_MarketPlaceUpdateModuleFrontController extends ModuleFrontController
 {
     public $seller;
     public $_errors= array();
@@ -41,33 +21,48 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
         if(!$this->context->customer->logged || !($this->seller = $this->module->_getSeller(true)) )
             Tools::redirect($this->context->link->getModuleLink($this->module->name,'myseller'));
         if(!$this->module->_checkPermissionPage($this->seller,'products'))
-            die($this->module->l('You do not have permission','import'));
-        if(Tools::isSubmit('submitUploadImportProduct') && Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT'))
+            die($this->module->l('You do not have permission','update'));
+
+        if(Tools::isSubmit('submitSetUpdateInterval'))
         {
-            if(isset($_FILES['file_import_product']['name']) && isset($_FILES['file_import_product']['tmp_name']) && $_FILES['file_import_product']['tmp_name'] && $_FILES['file_import_product']['name'])
+            $products_update_interval = (int)Tools::getValue('products_update_interval');
+            $products_update_url = (string)Tools::getValue('products_update_url');
+            $seller_id = (int)$this->seller->id;
+
+            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'ets_mp_seller_product_source` WHERE `seller`=\''.$seller_id.'\'');
+            Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ets_mp_seller_product_source` (`seller`,`interval`,`source`) VALUES ('.$seller_id.','.$products_update_interval.',\''.$products_update_url.'\')');
+
+            $this->_success = $this->module->l('Settings updated','upload');
+        }
+
+        if(Tools::isSubmit('submitTestUpdateInterval') && Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT'))
+        {
+            require_once('./modules/ets_marketplace/classes/productDataSource.php');
+            require_once('./modules/ets_marketplace/classes/updateProducts.php');
+
+            $source = (string)Tools::getValue('products_update_url');
+
+            $productDataSource = new ProductDataSource($source);
+
+            $productData = $productDataSource->parseSource();
+
+            if (isset($productData['error']) and $productData['error']!='')
             {
-                $imageFileType = Tools::strtolower(pathinfo($_FILES['file_import_product']['name'],PATHINFO_EXTENSION));
-                if($imageFileType=='csv')
-                {
-                    if(move_uploaded_file($_FILES['file_import_product']['tmp_name'], dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv'))
-                    {
-                        $this->_success = $this->module->l('File uploaded','import');
-                    }
-                    else
-                        $this->_errors[] = $this->module->l('Sorry, there was an error while uploading your file.','import');
-                }
-                else
-                    $this->_errors[] = $this->module->l('File is not valid','import');
+                $this->_errors[] = $productData['error'];
+                $result = $productData;
             }
             else
-                $this->_errors[] = $this->module->l('File is null','import');
+            {
+                $updateProducts = new UpdateProducts($this->seller, $productData);
+
+                $result = $updateProducts->go();
+
+                if ($result["error"]!='') $this->_errors[] = $this->module->l($result,'update');
+                else $this->_success = $this->module->l('Products updated','update');
+            }
 
         }
-        if(Tools::isSubmit('cancelSubmitImport'))
-        {
-            if(file_exists(dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv'))
-                @unlink(dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv');
-        }
+
         if(Tools::isSubmit('submitImportProduct') && Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT'))
         {
             ini_set('max_execution_time', 7200);
@@ -154,15 +149,15 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                         }
                     }
                     else
-                        $this->_errors[] = $this->module->l('Data is null','import');
+                        $this->_errors[] = $this->module->l('Data is null','update');
                     fclose($handle);
 
                 }
                 else
-                    $this->_errors[] = $this->module->l('Some duplicated data columns are existing','import');
+                    $this->_errors[] = $this->module->l('Some duplicated data columns are existing','update');
                 if(!$this->_errors)
                 {
-                    $this->_success = $this->module->l('Import successfully','import');
+                    $this->_success = $this->module->l('Import successfully','update');
                     @unlink(dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv');
                 }
             }
@@ -173,7 +168,7 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
         $languages = Language::getLanguages(false);
         $product = new Product();
         if(!isset($data[$col_name]) || (isset($data[$col_name]) && !$data[$col_name]))
-            $this->_errors[] = $this->module->l('Name in row','import').' '.$row.' '.$this->module->l('is not required','import');
+            $this->_errors[] = $this->module->l('Name in row','update').' '.$row.' '.$this->module->l('is not required','update');
         if(isset($data[$col_name]) && $data[$col_name] && Validate::isCatalogName($data[$col_name]))
         {
             foreach($languages as $language)
@@ -182,9 +177,9 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
             }
         }
         else
-            $this->_errors[] = $this->module->l('Name in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Name in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         if(!isset($data[$col_link_rewrite]) || (isset($data[$col_link_rewrite]) && !$data[$col_link_rewrite]))
-            $this->_errors[] = $this->module->l('Link rewrite in row','import').' '.$row.' '.$this->module->l('is required','import');
+            $this->_errors[] = $this->module->l('Link rewrite in row','update').' '.$row.' '.$this->module->l('is required','update');
         if(isset($data[$col_link_rewrite]) && $data[$col_link_rewrite] && Validate::isLinkRewrite($data[$col_link_rewrite]))
         {
             foreach($languages as $language)
@@ -199,18 +194,18 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
         }
         else
         {
-            $this->_errors[] = $this->module->l('Rewrite link in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Rewrite link in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         }
         if(!isset($data[$col_default_category]) || (isset($data[$col_default_category]) && !$data[$col_default_category]))
-            $this->_errors[] = $this->module->l('Category default in row','import').' '.$row.' '. $this->module->l('is required');
+            $this->_errors[] = $this->module->l('Category default in row','update').' '.$row.' '. $this->module->l('is required');
         if(isset($data[$col_default_category]) && $data[$col_default_category] && $this->_checkValidateCategory($data[$col_default_category]))
         {
             $product->id_category_default = (int)$data[$col_default_category];
         }
         else
-          $this->_errors[] = $this->module->l('Default category in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+          $this->_errors[] = $this->module->l('Default category in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         if(isset($data[$col_description]) && $data[$col_description] && !Validate::isCleanHtml($data[$col_description]))
-            $this->_errors[] = $this->module->l('Description in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Description in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         elseif(isset($data[$col_description]))
         {
             foreach($languages as $language)
@@ -219,7 +214,7 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
             }
         }
         if(isset($data[$col_description_short]) && $data[$col_description_short] && !Validate::isCleanHtml($data[$col_description_short]))
-            $this->_errors[] = $this->module->l('Short description in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Short description in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         elseif(isset($data[$col_description_short]))
         {
             foreach($languages as $language)
@@ -228,13 +223,13 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
             }
         }
         if(isset($data[$col_price]) && $data[$col_price] && !Validate::isPrice($data[$col_price]))
-            $this->_errors[] = $this->module->l('Price in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Price in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         elseif(isset($data[$col_price]))
             $product->price= $data[$col_price];
         else
             $product->price= 0;
         if(isset($data[$col_quantity]) && $data[$col_quantity] && !Validate::isInt($data[$col_quantity]))
-            $this->_errors[] = $this->module->l('Quantity in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+            $this->_errors[] = $this->module->l('Quantity in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         elseif($data[$col_quantity])
             $quantity= (int)$data[$col_quantity];
         else
@@ -251,12 +246,12 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                         $attributes = $combination['attributes'];
                         if(!($attributes && is_array($attributes)))
                         {
-                            $this->_errors[] = $this->module->l('Combination in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                            $this->_errors[] = $this->module->l('Combination in row','update').' '.$row.' '.$this->module->l('is not valid','update');
                             break;
                         }
                     }
                     else{
-                        $this->_errors[] = $this->module->l('Combination in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                        $this->_errors[] = $this->module->l('Combination in row','update').' '.$row.' '.$this->module->l('is not valid','update');
                         break;
                     }
                     if(isset($combination['specific_prices']) && $specific_prices = $combination['specific_prices'] )
@@ -268,7 +263,7 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                            {
                                 if(!(is_array($specific_price) && isset($specific_price['id_currency']) && isset($specific_price['id_group']) && isset($specific_price['id_customer']) && isset($specific_price['id_country']) && isset($specific_price['price']) && isset($specific_price['from_quantity']) && isset($specific_price['reduction']) && isset($specific_price['reduction_tax']) && isset($specific_price['reduction_type']) && isset($specific_price['from']) && isset($specific_price['to'])))
                                 {
-                                    $this->_errors[] = $this->module->l('Combination in row','import').' '.$row.' '.$this->module->l('is valid','import');
+                                    $this->_errors[] = $this->module->l('Combination in row','update').' '.$row.' '.$this->module->l('is valid','update');
                                     $ok=false;
                                     break;
                                 }
@@ -276,7 +271,7 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                         }
                         else
                         {
-                            $this ->_errors[] = $this->module->l('Combination in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                            $this ->_errors[] = $this->module->l('Combination in row','update').' '.$row.' '.$this->module->l('is not valid','update');
                             $ok= false;
                         }
                         if(!$ok)
@@ -285,7 +280,7 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                 }
             }
             else
-                $this->_errors[] = $this->module->l('Combination in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                $this->_errors[] = $this->module->l('Combination in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         }
         if(isset($data[$col_image]) && $data[$col_image])
         {
@@ -295,11 +290,11 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                 foreach($images as $image)
                 {
                     if(Tools::strpos(trim($image),'http')!==0 && Tools::strpos(trim($image),'https')!==0)
-                       $this->_errors[] =  $this->module->l('Image in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                       $this->_errors[] =  $this->module->l('Image in row','update').' '.$row.' '.$this->module->l('is not valid','update');
                 }
             }
             else
-                $this->_errors[] = $this->module->l('Image in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                $this->_errors[] = $this->module->l('Image in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         }
         if(isset($data[$col_specific_price]) && $data[$col_specific_price])
         {
@@ -312,12 +307,12 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                     if(!(is_array($specific_price) && isset($specific_price['id_currency']) && isset($specific_price['id_group']) && isset($specific_price['id_customer']) && isset($specific_price['id_country']) && isset($specific_price['price']) && isset($specific_price['from_quantity']) && isset($specific_price['reduction']) && isset($specific_price['reduction_tax']) && isset($specific_price['reduction_type']) && isset($specific_price['from']) && isset($specific_price['to'])))
                     {
 
-                        $this->_errors[] = $this->module->l('Specific price in row','import').' '.$row.' '.$this->module->l('is valid','import');
+                        $this->_errors[] = $this->module->l('Specific price in row','update').' '.$row.' '.$this->module->l('is valid','update');
                     }
                }
             }
             else
-                $this ->_errors[] = $this->module->l('Specific price in row','import').' '.$row.' '.$this->module->l('is not valid','import');
+                $this ->_errors[] = $this->module->l('Specific price in row','update').' '.$row.' '.$this->module->l('is not valid','update');
         }
         if($this->seller->vacation_mode && $this->seller->vacation_type=='disable_product')
             $product->active=0;
@@ -713,8 +708,6 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
                 ImageManager::resize($tmpfile, $path . '.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5, $src_width, $src_height);
             $images_types = ImageType::getImagesTypes($entity, true);
             if ($regenerate) {
-                //$path_infos = array();
-//                $path_infos[] = array($tgt_width, $tgt_height, $path.'.jpg');
                 foreach ($images_types as $image_type) {
                     if (version_compare(_PS_VERSION_, '1.7', '<'))
                         $formatted_small = ImageType::getFormatedName('small');
@@ -816,35 +809,13 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
         if($this->module->is17)
             $this->setTemplate('module:'.$this->module->name.'/views/templates/front/import.tpl');
         else
-            $this->setTemplate('import_16.tpl');
+            $this->setTemplate('update_16.tpl');
     }
     public function _initContent()
     {
         if(!Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT'))
-            return $this->module->displayWarning($this->module->l('You do not have permission to create new product','import'));
-        if(file_exists(dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv'))
-        {
-            $data = array();
-            $handle = fopen(dirname(__FILE__).'/../../views/import/seller'.$this->seller->id.'.csv', "r");
-            $row = 1;
-            $datas = array();
-            if ($handle !== FALSE) {
-                while (($data = fgetcsv($handle, 0, ",")) !== FALSE) {
-                    if($row>5)
-                        break;
-                    $data[0] = str_replace(array(chr(255),chr(254)),'',$data[0]);
-                    $datas[] = $data;
-                    $row++;
-                }
-            }
-            fclose($handle);
-            $this->context->smarty->assign(
-                array(
-                    'datas' => $datas,
-                )
-            );
-            return $this->context->smarty->fetch(_PS_MODULE_DIR_.$this->module->name.'/views/templates/hook/product/import.tpl');
-        }
+            return $this->module->displayWarning($this->module->l('You do not have permission to create new product','update'));
+
         if(Configuration::get('ETS_MP_APPLICABLE_CATEGORIES')=='specific_product_categories' && Configuration::get('ETS_MP_SELLER_CATEGORIES'))
         {
             $seller_categories = explode(',',Configuration::get('ETS_MP_SELLER_CATEGORIES'));
@@ -854,12 +825,22 @@ class Ets_MarketPlaceImportModuleFrontController extends ModuleFrontController
         LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.id_category=cl.id_category AND cl.id_lang="'.(int)$this->context->language->id.'")
         WHERE c.id_parent!=0 AND c.is_root_category!=1 '.(isset($seller_categories) && $seller_categories ? ' AND c.id_category IN ('.implode(',',array_map('intval',$seller_categories)).')':'').' ORDER BY cl.name ASC';
         $categories = Db::getInstance()->executeS($sql);
+
+        $sql ='SELECT `interval`, `source`, `last_update` FROM `'._DB_PREFIX_.'ets_mp_seller_product_source` WHERE `seller`=\''.$this->seller->id.'\'';
+        $row = Db::getInstance()->getRow($sql);
+        $interval = $row['interval'];
+        $source = $row['source'];
+        $last_update = $row['last_update'];
+
         $this->context->smarty->assign(
             array(
                 'link_sample' => $this->module->getBaseLink().'/modules/'.$this->module->name.'/sample-import-file.csv',
-                'categories'=> $categories
+                'categories'=> $categories,
+                'interval'=> $interval,
+                'source'=> $source,
+                'last_update'=> $last_update
             )
         );
-        return $this->context->smarty->fetch(_PS_MODULE_DIR_.$this->module->name.'/views/templates/hook/product/import_upload.tpl');
+        return $this->context->smarty->fetch(_PS_MODULE_DIR_.$this->module->name.'/views/templates/hook/product/update_upload.tpl');
     }
  }

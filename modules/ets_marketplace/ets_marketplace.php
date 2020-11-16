@@ -5,9 +5,9 @@
  * NOTICE OF LICENSE
  *
  * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+ * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
  * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- * 
+ *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -39,6 +39,8 @@ require_once(dirname(__FILE__) . '/classes/group.php');
 require_once(dirname(__FILE__) . '/classes/contact.php');
 require_once(dirname(__FILE__) . '/classes/contact_message.php');
 require_once(dirname(__FILE__) . '/classes/Ets_mp_email.php');
+require_once(dirname(__FILE__) . '/classes/productDataSource.php');
+require_once(dirname(__FILE__) . '/classes/updateProducts.php');
 if(!class_exists('Ets_mp_defines'))
     require_once(dirname(__FILE__) . '/classes/Ets_mp_defines.php');
 if (!defined('_PS_ETS_MARKETPLACE_UPLOAD_DIR_')) {
@@ -48,7 +50,7 @@ if (!defined('_PS_ETS_MARKETPLACE_UPLOAD_')) {
     define('_PS_ETS_MARKETPLACE_UPLOAD_', __PS_BASE_URI__.'upload/ets_marketplace/');
 }
 class Ets_marketplace extends PaymentModule
-{ 
+{
     public $is17 = false;
     public $_errors = array();
     public $_path_module;
@@ -95,7 +97,7 @@ class Ets_marketplace extends PaymentModule
 		$this->secure_key = Tools::encrypt($this->name);
 		$this->bootstrap = true;
         if(version_compare(_PS_VERSION_, '1.7', '>='))
-            $this->is17 = true; 
+            $this->is17 = true;
         $this->module_key = 'eb5f1931437c485fa5ccdb6a0477081b';
         $this->ps_versions_compliancy = array('min' => '1.6.0.0', 'max' => _PS_VERSION_);
 		parent::__construct();
@@ -171,10 +173,10 @@ class Ets_marketplace extends PaymentModule
     public function install()
 	{
 	    return parent::install()
-        && $this->_installDb() 
+        && $this->_installDb()
         && $this->_registerHooks()
-        && $this->_installDbDefault() 
-        && $this->_installTabs() 
+        && $this->_installDbDefault()
+        && $this->_installTabs()
         && $this->createTemplateMail()
         && $this->installLinkDefault() && $this->createIndexDataBase()&&$this->_installOverried();
     }
@@ -240,7 +242,7 @@ class Ets_marketplace extends PaymentModule
             $tab = new Tab();
             $tab->class_name = 'AdminMarketPlace';
             $tab->module = $this->name;
-            $tab->id_parent = 0;            
+            $tab->id_parent = 0;
             foreach($languages as $lang){
                 $tab->name[$lang['id_lang']] = $this->getTextLang('Market place',$lang) ? : $this->l('Market place');
             }
@@ -302,7 +304,7 @@ class Ets_marketplace extends PaymentModule
                             'tab_name' => $this->l('Shops'),
                             'tabname' => 'Shops',
                             'class_name'=> 'AdminMarketPlaceSellers',
-                            'icon' => 'icon icon-sellers', 
+                            'icon' => 'icon icon-sellers',
                         ),
                         'AdminMarketPlaceShopGroups' => array(
                             'tab_name' => $this->l('Shop groups'),
@@ -316,7 +318,7 @@ class Ets_marketplace extends PaymentModule
                             'class_name' => 'AdminMarketPlaceReport',
                             'icon' => 'icon icon-report',
                         )
-                        
+
                     ),
                 ),
                 array(
@@ -330,7 +332,7 @@ class Ets_marketplace extends PaymentModule
                             'tab_name' => $this->l('General'),
                             'tabname' => 'General',
                             'icon'=>'icon icon-settings',
-                        ),   
+                        ),
                         array(
                             'class_name' => 'AdminMarketPlaceCommissionsUsage',
                             'tab_name' => $this->l('Commissions'),
@@ -353,8 +355,8 @@ class Ets_marketplace extends PaymentModule
                     $tab = new Tab();
                     $tab->class_name = $tabArg['class_name'];
                     $tab->module = $this->name;
-                    $tab->id_parent = $tabId; 
-                    $tab->icon=$tabArg['icon'];           
+                    $tab->id_parent = $tabId;
+                    $tab->icon=$tabArg['icon'];
                     foreach($languages as $lang){
                         $tab->name[$lang['id_lang']] = $this->getTextLang($tabArg['tabname'],$lang)?: $tabArg['tab_name'];
                     }
@@ -366,8 +368,8 @@ class Ets_marketplace extends PaymentModule
                             $subtab = new Tab();
                             $subtab->class_name = $sub['class_name'];
                             $subtab->module = $this->name;
-                            $subtab->id_parent = $tab->id; 
-                            $subtab->icon=$sub['icon'];           
+                            $subtab->id_parent = $tab->id;
+                            $subtab->icon=$sub['icon'];
                             foreach($languages as $lang){
                                 $subtab->name[$lang['id_lang']] = $this->getTextLang($sub['tabname'],$lang)?: $sub['tab_name'];
                             }
@@ -383,18 +385,18 @@ class Ets_marketplace extends PaymentModule
                             $subtab = new Tab();
                             $subtab->class_name = $sub['class_name'];
                             $subtab->module = $this->name;
-                            $subtab->id_parent = $tab_id; 
-                            $subtab->icon=$sub['icon'];           
+                            $subtab->id_parent = $tab_id;
+                            $subtab->icon=$sub['icon'];
                             foreach($languages as $lang){
                                 $subtab->name[$lang['id_lang']] = $this->getTextLang($sub['tabname'],$lang)?:$sub['tab_name'];
                             }
                             $subtab->save();
                         }
-                        
+
                     }
                 }
-            }                
-        }            
+            }
+        }
         return true;
     }
     public function setMetas()
@@ -419,7 +421,7 @@ class Ets_marketplace extends PaymentModule
                 $body_classes = array(
                     'lang-'.$this->context->language->iso_code => true,
                     'lang-rtl' => (bool) $this->context->language->is_rtl,
-                    'country-'.$this->context->country->iso_code => true,                              
+                    'country-'.$this->context->country->iso_code => true,
                 );
                 $page = array(
                     'title' => '',
@@ -433,14 +435,14 @@ class Ets_marketplace extends PaymentModule
                     'page_name' => '',
                     'body_classes' => $body_classes,
                     'admin_notifications' => array(),
-                ); 
-                $this->context->smarty->assign(array('page' => $page)); 
-            }    
+                );
+                $this->context->smarty->assign(array('page' => $page));
+            }
             else
             {
                 $this->context->smarty->assign($meta);
-            }   
-        }        
+            }
+        }
     }
     public function installLinkDefault()
     {
@@ -563,6 +565,13 @@ class Ets_marketplace extends PaymentModule
                 'tabname' => 'Import products',
                 'url_rewrite' => 'seller-import-products',
                 'url_rewrite_lang' =>$this->l('seller-import-products'),
+            ),
+            array(
+                'controller' => 'update',
+                'title' => $this->l('Update products'),
+                'tabname' => 'Update products',
+                'url_rewrite' => 'seller-update-products',
+                'url_rewrite_lang' =>$this->l('seller-update-products'),
             ),
             array(
                 'controller' => 'contactseller',
@@ -700,6 +709,11 @@ class Ets_marketplace extends PaymentModule
                 'url_rewrite' => 'seller-import-products'
             ),
             array(
+                'controller' => 'update',
+                'title' => $this->l('Update products'),
+                'url_rewrite' => 'seller-update-products'
+            ),
+            array(
                 'controller' => 'contact',
                 'title' => $this->l('Seller contact'),
                 'url_rewrite' => 'seller-contact'
@@ -738,13 +752,13 @@ class Ets_marketplace extends PaymentModule
     public function _installDb(){
         if(!class_exists('Ets_mp_defines'))
             require_once(dirname(__FILE__) . '/classes/Ets_mp_defines.php');
-        $files = glob(dirname(__FILE__).'/views/import/*'); 
+        $files = glob(dirname(__FILE__).'/views/import/*');
         if($files)
         {
-           foreach($files as $file){ 
+           foreach($files as $file){
                 if(is_file($file) && $file!=dirname(__FILE__).'/views/import/index.php')
-                    @unlink($file); 
-            } 
+                    @unlink($file);
+            }
         }
         return Ets_mp_defines::getInstance()->_installDb();
     }
@@ -932,7 +946,7 @@ class Ets_marketplace extends PaymentModule
                     $tab = new Tab($tabId);
                     if($tab)
                         $tab->delete();
-                }               
+                }
             }
             if($tabId = Tab::getIdFromClassName('AdminMarketPlace'))
             {
@@ -999,46 +1013,46 @@ class Ets_marketplace extends PaymentModule
         if($tables)
         {
             foreach($tables as $table)
-               Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . pSQL($table).'`'); 
+               Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . pSQL($table).'`');
         }
-        $files = glob(_PS_IMG_DIR_.'mp_seller/*'); 
+        $files = glob(_PS_IMG_DIR_.'mp_seller/*');
         if($files)
         {
-           foreach($files as $file){ 
-                    @unlink($file); 
-            } 
+           foreach($files as $file){
+                    @unlink($file);
+            }
         }
-        $files = glob(_PS_ETS_MARKETPLACE_UPLOAD_DIR_.'mp_attachment/*'); 
+        $files = glob(_PS_ETS_MARKETPLACE_UPLOAD_DIR_.'mp_attachment/*');
         if($files)
         {
-           foreach($files as $file){ 
-                @unlink($file); 
-           } 
+           foreach($files as $file){
+                @unlink($file);
+           }
         }
-        $files = glob(_PS_IMG_DIR_.'mp_payment/*'); 
+        $files = glob(_PS_IMG_DIR_.'mp_payment/*');
         if($files)
         {
-           foreach($files as $file){ 
-                @unlink($file); 
-           } 
+           foreach($files as $file){
+                @unlink($file);
+           }
         }
-        $files = glob(dirname(__FILE__).'/views/import/*'); 
+        $files = glob(dirname(__FILE__).'/views/import/*');
         if($files)
         {
-           foreach($files as $file){ 
+           foreach($files as $file){
                 if(is_file($file) && $file!=dirname(__FILE__).'/views/import/index.php')
-                    @unlink($file); 
-            } 
-        } 
-        $files = glob(_PS_IMG_DIR_.'mp_group/*'); 
+                    @unlink($file);
+            }
+        }
+        $files = glob(_PS_IMG_DIR_.'mp_group/*');
         if($files)
         {
-           foreach($files as $file){ 
-                    @unlink($file); 
-            } 
+           foreach($files as $file){
+                    @unlink($file);
+            }
         }
         if(file_exists(dirname(__FILE__).'/cronjob_log.txt'))
-            @unlink(dirname(__FILE__).'/cronjob_log.txt');   
+            @unlink(dirname(__FILE__).'/cronjob_log.txt');
         return true;
     }
     public function getSellerInfoById($id_seller)
@@ -1070,7 +1084,7 @@ class Ets_marketplace extends PaymentModule
         {
             $this->context->controller->addJquery();
             $this->context->controller->addJS($this->_path.'views/js/Chart.min.js');
-            $this->context->controller->addCSS($this->_path.'views/css/daterangepicker.css'); 
+            $this->context->controller->addCSS($this->_path.'views/css/daterangepicker.css');
         }
         if(Tools::getValue('controller')=='AdminMarketPlaceProducts')
         {
@@ -1110,7 +1124,7 @@ class Ets_marketplace extends PaymentModule
                     INNER JOIN `'._DB_PREFIX_.'ets_mp_seller` seller ON (customer.id_customer=seller.id_customer)
                     WHERE p.id_product='.(int)$id_product;
                     $id_seller = (int)Db::getInstance()->getValue($sql);
-                }    
+                }
             }
             if(isset($id_seller) && $id_seller)
             {
@@ -1125,7 +1139,7 @@ class Ets_marketplace extends PaymentModule
             array(
                 'total_registrations' => Db::getInstance()->getValue('
                     SELECT COUNT(*) FROM `'._DB_PREFIX_.'ets_mp_registration` r
-                    LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller` s ON (r.id_customer=s.id_customer) 
+                    LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller` s ON (r.id_customer=s.id_customer)
                     WHERE s.id_seller is null AND r.active=-1 AND r.id_shop="'.(int)$this->context->shop->id.'"'),
                 'total_seller_wait_approve' => Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'ets_mp_seller` WHERE payment_verify!=0 AND active!=1'),
             )
@@ -1153,7 +1167,7 @@ class Ets_marketplace extends PaymentModule
         {
             if(isset($this->context->employee) && isset($this->context->employee->id) && $this->context->employee->id)
             {
-               $admin= true; 
+               $admin= true;
             }
             else
                 $admin = false;
@@ -1195,7 +1209,7 @@ class Ets_marketplace extends PaymentModule
                 }
             }
         }
-        
+
     }
     public function hookDisplayAdminProductsSeller($params)
     {
@@ -1266,7 +1280,7 @@ class Ets_marketplace extends PaymentModule
             if($this->_errors)
                 $html .= $this->displayError($this->_errors);
             $html .=$this->display(__FILE__,'admin.tpl');
-            return $html;  
+            return $html;
         }
         elseif(Tools::getValue('controller')=='AdminModules')
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceDashboard'));
@@ -1301,11 +1315,11 @@ class Ets_marketplace extends PaymentModule
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceRegistrationsController'));
             case 'sellers':
             {
-                Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceSellersController')); 
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceSellersController'));
             }
             case 'payments':
             {
-                Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlacePaymentsController')); 
+                Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlacePaymentsController'));
             }
             case 'cronjob':
                 return $this->_renderCronjob();
@@ -1315,7 +1329,7 @@ class Ets_marketplace extends PaymentModule
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceOrdersController'));
             default:
                 Tools::redirectAdmin($this->context->link->getAdminLink('AdminMarketPlaceDashboardController'));
-        } 
+        }
     }
     public function _renderCronjob()
     {
@@ -1341,7 +1355,7 @@ class Ets_marketplace extends PaymentModule
                         )
                     )
                 );
-            }   
+            }
         }
         if(!Configuration::getGlobalValue('ETS_MP_CRONJOB_TOKEN'))
             Configuration::updateGlobalValue('ETS_MP_CRONJOB_TOKEN',Tools::passwdGen(12));
@@ -1383,7 +1397,7 @@ class Ets_marketplace extends PaymentModule
                     {
                         $fields[$config['name']][$language['id_lang']] = Tools::getValue($config['name'].'_'.$language['id_lang'],Configuration::get($config['name'],$language['id_lang']));
                     }
-                    
+
                 }
                 else
                     $fields[$config['name']] = Tools::getValue($config['name'],Configuration::get($config['name']));
@@ -1410,7 +1424,7 @@ class Ets_marketplace extends PaymentModule
     	$helper->submit_action = 'saveConfig';
     	$helper->currentIndex = $this->context->link->getAdminLink('AdminMarketPlaceSettingsGeneral', false);
     	$helper->token = Tools::getAdminTokenLite('AdminMarketPlaceSettingsGeneral');
-    	$language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));            
+    	$language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
         $helper->tpl_vars = array(
     		'base_url' => $this->context->shop->getBaseURL(),
     		'language' => array(
@@ -1426,7 +1440,7 @@ class Ets_marketplace extends PaymentModule
             'current_tab' => Tools::getValue('current_tab','conditions'),
             'image_baseurl' => $this->_path.'views/img/',
         );
-        return $helper->generateForm(array($fields_form));	
+        return $helper->generateForm(array($fields_form));
     }
     public function _checkFormBeforeSubmit()
     {
@@ -1478,7 +1492,7 @@ class Ets_marketplace extends PaymentModule
             {
                 $name = $config['name'];
                 if(isset($config['lang']) && $config['lang'])
-                { 
+                {
                     if((isset($config['validate']) && $config['validate'] && method_exists('Validate',$config['validate'])))
                     {
                         $validate = $config['validate'];
@@ -1498,9 +1512,9 @@ class Ets_marketplace extends PaymentModule
                         if(trim(Tools::getValue($name)) && !Validate::$validate(trim(Tools::getValue($name))))
                              $this->_errors[] = $config['label'].' '. $this->l('is not valid');
                         unset($validate);
-                    } 
+                    }
                 }
-                    
+
             }
         }
         if(Tools::getValue('ETS_MP_APPLICABLE_CATEGORIES')=='specific_product_categories' && !Tools::getValue('ETS_MP_SELLER_CATEGORIES'))
@@ -1533,7 +1547,7 @@ class Ets_marketplace extends PaymentModule
         {
             foreach($settings as $config)
             {
-                
+
                 if($config['type']=='checkbox' || $config['type']=='categories'|| $config['type']=='tre_categories')
                 {
                     Configuration::deleteByName($config['name']);
@@ -1549,7 +1563,7 @@ class Ets_marketplace extends PaymentModule
                         {
                             $values[$language['id_lang']] = Tools::getValue($config['name'].'_'.$language['id_lang']) ? Tools::getValue($config['name'].'_'.$language['id_lang']) :Tools::getValue($config['name'].'_'.$id_language_default);
                         }
-                        
+
                         Configuration::updateValue($config['name'],$values,true);
                     }
                     elseif($config['type']=='file')
@@ -1571,14 +1585,14 @@ class Ets_marketplace extends PaymentModule
                                     @unlink(dirname(__FILE__).'/views/img/'.$file_old);
                             }
                         }
-                    }    
+                    }
                     else
                     {
                         Configuration::deleteByName($config['name']);
                         Configuration::updateValue($config['name'],Tools::getValue($config['name']),true);
                     }
                 }
-                
+
             }
             Configuration::updateValue('ETS_MP_REGISTRATION_FIELDS_VALIDATE',implode(',',Tools::getValue('ETS_MP_REGISTRATION_FIELDS_VALIDATE',array())));
             Configuration::updateValue('ETS_MP_CONTACT_FIELDS_VALIDATE',implode(',',Tools::getValue('ETS_MP_CONTACT_FIELDS_VALIDATE',array())));
@@ -1588,7 +1602,7 @@ class Ets_marketplace extends PaymentModule
     }
     public function _checkPermissionPage($seller=false,$controller='')
     {
-        if(!$seller) 
+        if(!$seller)
             $seller = $this->_getSeller(true);
         if(!$controller)
             $controller = Tools::getValue('controller');
@@ -1621,7 +1635,7 @@ class Ets_marketplace extends PaymentModule
         return false;
     }
     public function renderList($listData)
-    { 
+    {
         if(isset($listData['fields_list']) && $listData['fields_list'])
         {
             foreach($listData['fields_list'] as $key => &$val)
@@ -1630,27 +1644,27 @@ class Ets_marketplace extends PaymentModule
                 {
                     if(Tools::isSubmit('ets_mp_submit_'.$listData['name']))
                     {
-                        $val['active']['max'] =  trim(Tools::getValue($key.'_max'));   
-                        $val['active']['min'] =  trim(Tools::getValue($key.'_min')); 
+                        $val['active']['max'] =  trim(Tools::getValue($key.'_max'));
+                        $val['active']['min'] =  trim(Tools::getValue($key.'_min'));
                     }
                     else
                     {
                         $val['active']['max']='';
                         $val['active']['min']='';
-                    }  
-                }  
-                elseif(!Tools::getValue('del') && Tools::isSubmit('ets_mp_submit_'.$listData['name']))               
+                    }
+                }
+                elseif(!Tools::getValue('del') && Tools::isSubmit('ets_mp_submit_'.$listData['name']))
                     $val['active'] = trim(Tools::getValue($key));
                 else
                     $val['active']='';
             }
-        }    
+        }
         $this->smarty->assign($listData);
         return $this->display(__FILE__, 'list_helper.tpl');
     }
     public function getFilterParams($field_list,$table='')
     {
-        $params = '';        
+        $params = '';
         if($field_list)
         {
             if(Tools::isSubmit('ets_mp_submit_'.$table))
@@ -1668,7 +1682,7 @@ class Ets_marketplace extends PaymentModule
                 if(Tools::getValue($key.'_min')!='')
                 {
                     $params .= '&'.$key.'_min='.urlencode(Tools::getValue($key.'_min'));
-                } 
+                }
             }
             unset($val);
         }
@@ -1694,7 +1708,7 @@ class Ets_marketplace extends PaymentModule
                     $errors[] = sprintf($this->l('The file name "%s" is too large. Limit: %s'),$file_name,Tools::ps_round($max_file_size/1048576,2).'Mb');
             }
         }
-        
+
     }
     public function uploadFile($name,&$errors)
     {
@@ -1712,14 +1726,14 @@ class Ets_marketplace extends PaymentModule
                 $type = Tools::strtolower(Tools::substr(strrchr($_FILES[$name]['name'], '.'), 1));
                 $_FILES[$name]['name'] = Tools::strtolower(Tools::passwdGen(12,'NO_NUMERIC')).'.'.$type;
     			$imagesize = @getimagesize($_FILES[$name]['tmp_name']);
-    			if (isset($_FILES[$name]) &&				
+    			if (isset($_FILES[$name]) &&
     				!empty($_FILES[$name]['tmp_name']) &&
     				!empty($imagesize) &&
     				in_array($type, array('jpg', 'gif', 'jpeg', 'png'))
     			)
     			{
-    				$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');    
-                    $max_file_size = Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')*1024*1024;				
+    				$temp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+                    $max_file_size = Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')*1024*1024;
     				if ($_FILES[$name]['size'] > $max_file_size)
     					$errors[] = sprintf($this->l('Image is too large (%s Mb). Maximum allowed: %s Mb'),Tools::ps_round((float)$_FILES[$name]['size']/1048576,2), Tools::ps_round(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'),2));
     				elseif (!$temp_name || !move_uploaded_file($_FILES[$name]['tmp_name'], $temp_name))
@@ -1729,7 +1743,7 @@ class Ets_marketplace extends PaymentModule
     				if (isset($temp_name))
     					@unlink($temp_name);
                     if(!$errors)
-                        return $_FILES[$name]['name'];		
+                        return $_FILES[$name]['name'];
     			}
                 else
                 {
@@ -1739,7 +1753,7 @@ class Ets_marketplace extends PaymentModule
                         $errors[] = $this->l('Banner is not valid');
                 }
             }
-                
+
         }
         return '';
     }
@@ -1963,6 +1977,20 @@ class Ets_marketplace extends PaymentModule
                 'last' => true,
             );
         }
+
+        if(Tools::getValue('controller')=='update')
+        {
+            $nodes[] = array(
+                'title' => $this->l('Products'),
+                'url' => $this->context->link->getModuleLink($this->name,'products',array('list'=>1)),
+            );
+            $nodes[] = array(
+                'title' => $this->l('Update products'),
+                'url' => $this->context->link->getModuleLink($this->name,'update'),
+                'last' => true,
+            );
+        }
+
         if(Tools::getValue('controller')=='manager')
         {
             $nodes[] = array(
@@ -2021,22 +2049,22 @@ class Ets_marketplace extends PaymentModule
             }
             elseif(Configuration::get('ETS_MP_COMMISSION_APPROVED_WHEN') && ($status_approved = explode(',',Configuration::get('ETS_MP_COMMISSION_APPROVED_WHEN'))) && in_array($newOrderStatus->id,$status_approved))
             {
-                
+
                 if(!$days = (int)Configuration::get('ETS_MP_VALIATE_COMMISSION_IN_DAYS'))
                     $status=1;
                 else
                 {
                     $status=-1;
                     $expired_date = date('Y-m-d H:i:s',strtotime("+ $days days"));
-                }    
-                
+                }
+
             }
             elseif(Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN') && ($status_canceled = explode(',',Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN'))) && in_array($newOrderStatus->id,$status_canceled))
             {
                 $status=0;
             }
             else
-                $status=-1;   
+                $status=-1;
             foreach($commissions as $commission)
             {
                 $ets_commission = new Ets_mp_commission($commission['id_seller_commission']);
@@ -2064,7 +2092,7 @@ class Ets_marketplace extends PaymentModule
                     );
                     return $this->display(__FILE__, 'cart-message.tpl');
                 }
-                
+
             }
         }
     }
@@ -2080,7 +2108,7 @@ class Ets_marketplace extends PaymentModule
             else
                 $this->changeCommissionWhenUpdateOrder($orderDetail);
         }
-        
+
     }
     public function hookActionObjectOrderDetailAddAfter($params)
     {
@@ -2111,25 +2139,25 @@ class Ets_marketplace extends PaymentModule
                 Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ets_mp_seller_order`(id_order,id_customer) VALUES("'.(int)$order->id.'","'.(int)$id_customer.'")');
             }
             if($id_commission = (int)Db::getInstance()->getValue('SELECT id_seller_commission FROM `'._DB_PREFIX_.'ets_mp_seller_commission` WHERE id_order="'.(int)$orderDetail->id_order.'" AND id_product="'.(int)$product['product_id'].'" AND id_product_attribute="'.(int)$product['product_attribute_id'].'"'))
-                $commission = new Ets_mp_commission($id_commission); 
+                $commission = new Ets_mp_commission($id_commission);
             else
-                $commission = new Ets_mp_commission(); 
+                $commission = new Ets_mp_commission();
             $commission->id_product = (int)$product['product_id'];
             $commission->id_customer= $id_customer;
             $commission->id_order = (int)$order->id;
             $commission->id_product_attribute = (int)$product['product_attribute_id'];
             $commission->product_name = $product['product_name'];
             $commission->quantity = (int)$product['product_quantity'];
-            $commission->price = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_excl'],null,false),6);  
+            $commission->price = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_excl'],null,false),6);
             $commission->price_tax_incl = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_incl'],null,false),6);
             $commission->total_price = (float)Tools::ps_round(Tools::convertPrice($product['total_price_tax_excl'],null,false),6);
             $commission->total_price_tax_incl=(float)Tools::ps_round(Tools::convertPrice($product['total_price_tax_incl'],null,false),6);
             $commission->id_shop = $order->id_shop;
-            $commission->date_add = date('Y-m-d H:i:s'); 
-            $commission->date_upd = date('Y-m-d H:i:s'); 
+            $commission->date_add = date('Y-m-d H:i:s');
+            $commission->date_upd = date('Y-m-d H:i:s');
             $seller = Ets_mp_seller::_getSellerByIdCustomer($id_customer);
             $commistion_rate = $seller->commission_rate!=0 ? (float)$seller->commission_rate: (float)$seller->getCommissionRate();
-            
+
             if(Configuration::get('ETS_MP_COMMISSION_EXCLUDE_TAX'))
             {
                 $commission->commission = (float)Tools::ps_round(Tools::convertPrice($product['total_price_tax_excl'],null,false) * $commistion_rate/100,6);
@@ -2154,7 +2182,7 @@ class Ets_marketplace extends PaymentModule
                     {
                         $commission->status=-1;
                         $commission->expired_date = date('Y-m-d H:i:s',strtotime("+ $days days"));
-                    }    
+                    }
                 }
                 elseif(Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN') && ($status_canceled = explode(',',Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN'))) && in_array($order->current_state,$status_canceled))
                 {
@@ -2236,20 +2264,20 @@ class Ets_marketplace extends PaymentModule
                             Ets_marketplace::sendMail('to_seller_product_purchased',$data,$seller->seller_email,$subjects,$seller->seller_name);
                         }
                     }
-                    $commission = new Ets_mp_commission(); 
+                    $commission = new Ets_mp_commission();
                     $commission->id_product = (int)$product['product_id'];
                     $commission->id_customer= $id_customer;
                     $commission->id_order = (int)$order->id;
                     $commission->id_product_attribute = (int)$product['product_attribute_id'];
                     $commission->product_name = $product['product_name'];
                     $commission->quantity = (int)$product['product_quantity'];
-                    $commission->price = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_excl'],null,false),6);  
+                    $commission->price = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_excl'],null,false),6);
                     $commission->price_tax_incl = (float)Tools::ps_round(Tools::convertPrice($product['unit_price_tax_incl'],null,false),6);
                     $commission->total_price = (float)Tools::ps_round(Tools::convertPrice($product['total_price_tax_excl'],null,false),6);
                     $commission->total_price_tax_incl=(float)Tools::ps_round(Tools::convertPrice($product['total_price_tax_incl'],null,false),6);
                     $commission->id_shop = $order->id_shop;
-                    $commission->date_add = date('Y-m-d H:i:s'); 
-                    $commission->date_upd = date('Y-m-d H:i:s'); 
+                    $commission->date_add = date('Y-m-d H:i:s');
+                    $commission->date_upd = date('Y-m-d H:i:s');
                     $commistion_rate = $seller->commission_rate!=0 ? (float)$seller->commission_rate: (float)$seller->getCommissionRate();
                     if(Configuration::get('ETS_MP_COMMISSION_EXCLUDE_TAX'))
                     {
@@ -2273,7 +2301,7 @@ class Ets_marketplace extends PaymentModule
                         {
                             $commission->status=-1;
                             $commission->expired_date = date('Y-m-d H:i:s',strtotime("+ $days days"));
-                        }    
+                        }
                     }
                     elseif(Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN') && ($status_canceled = explode(',',Configuration::get('ETS_MP_COMMISSION_CANCELED_WHEN'))) && in_array($params['orderStatus']->id,$status_canceled))
                     {
@@ -2332,11 +2360,11 @@ class Ets_marketplace extends PaymentModule
 
 		return Language::getIsoById($id_lang).'/';
 	}
-	
+
 	public function getBaseLinkFriendly($id_shop = null, $ssl = null)
 	{
 		static $force_ssl = null;
-		
+
 		if ($ssl === null)
 		{
 			if ($force_ssl === null)
@@ -2355,17 +2383,17 @@ class Ets_marketplace extends PaymentModule
 	}
     public function getShopLink($params = array())
     {
-        $context = Context::getContext();      
+        $context = Context::getContext();
         $id_lang =  $context->language->id;
         $subfix = (int)Configuration::get('ETS_MP_URL_SUBFIX') ? '.html' : '';
         $alias = Configuration::get('ETS_MP_SHOP_ALIAS',$this->context->language->id) ?:'shops';
-        $friendly = Configuration::get('PS_REWRITING_SETTINGS');        
+        $friendly = Configuration::get('PS_REWRITING_SETTINGS');
         if($friendly && $alias)
-        {    
-            $url = $this->getBaseLinkFriendly(null, null).$this->getLangLinkFriendly($id_lang, null, null).$alias; 
+        {
+            $url = $this->getBaseLinkFriendly(null, null).$this->getLangLinkFriendly($id_lang, null, null).$alias;
             if(isset($params['id_seller']) && $params['id_seller'])
             {
-                
+
                 $seller = new Ets_mp_seller($params['id_seller'],$id_lang);
 
                 $url .= '/'.$seller->id.'-'.Tools::link_rewrite($seller->shop_name).$subfix;
@@ -2378,7 +2406,7 @@ class Ets_marketplace extends PaymentModule
                     $extra .='&'.$key.'='.$param;
                 $url .= '?'.ltrim($extra,'&');
             }
-            return $url;       
+            return $url;
         }
         else
             return $this->context->link->getModuleLink($this->name,'shop',$params);
@@ -2392,7 +2420,7 @@ class Ets_marketplace extends PaymentModule
         }
         if(Tools::isSubmit('i_have_just_sent_the_fee') && ($seller= $this->_getSeller()))
         {
- 
+
             $seller->confirmedPayment();
         }
         if(Tools::getValue('module')==$this->name || Tools::getValue('controller')=='myaccount')
@@ -2406,7 +2434,7 @@ class Ets_marketplace extends PaymentModule
             $this->context->controller->addJqueryUI('ui.tooltip');
             $this->context->controller->addJqueryUI('ui.effect');
             $this->context->controller->addJqueryUI('ui.datepicker');
-            $this->context->controller->addCSS($this->_path.'views/css/front.css'); 
+            $this->context->controller->addCSS($this->_path.'views/css/front.css');
             if(Tools::getValue('controller')=='carrier')
             {
                 if(Tools::isSubmit('addnew') || (Tools::isSubmit('editmp_carrier') && Tools::getValue('id_carrier')))
@@ -2418,9 +2446,9 @@ class Ets_marketplace extends PaymentModule
                         $this->context->controller->registerJavascript('modules-ets_marketplace-carrier','modules/'.$this->name.'/views/js/carrier.js', ['position' => 'bottom', 'priority' => 160]);
                     }
                     else
-                       $this->context->controller->addJS($this->_path.'views/js/carrier.js'); 
+                       $this->context->controller->addJS($this->_path.'views/js/carrier.js');
                 }
-            }    
+            }
             if(!$this->is17)
                 $this->context->controller->addCSS($this->_path.'views/css/front16.css');
             $this->context->controller->addCSS($this->_path.'views/css/autosearch.css');
@@ -2446,7 +2474,7 @@ class Ets_marketplace extends PaymentModule
                     $this->context->controller->addJS($this->_path.'views/js/daterangepicker.js');
                     $this->context->controller->addJS($this->_path.'views/js/front_dashboard.js');
                 }
-                
+
             }
             if(!$this->is17 && Tools::getValue('controller')=='shop')
             {
@@ -2466,9 +2494,9 @@ class Ets_marketplace extends PaymentModule
             {
                 $this->context->controller->registerJavascript('modules-ets_marketplace-auto','modules/'.$this->name.'/views/js/autosearch.js', ['position' => 'bottom', 'priority' => 150]);
                 $this->context->controller->registerJavascript('modules-ets_marketplace','modules/'.$this->name.'/views/js/front.js', ['position' => 'bottom', 'priority' => 151]);
-                $this->context->controller->registerJavascript('modules-ets_marketplace-multi-upload','modules/'.$this->name.'/views/js/multi_upload.js', ['position' => 'bottom', 'priority' => 151]); 
+                $this->context->controller->registerJavascript('modules-ets_marketplace-multi-upload','modules/'.$this->name.'/views/js/multi_upload.js', ['position' => 'bottom', 'priority' => 151]);
                 $this->context->controller->registerJavascript('js-jquery-plugins-timepicker','js/jquery/plugins/timepicker/jquery-ui-timepicker-addon.js', ['position' => 'bottom', 'priority' => 151]);
-            }    
+            }
             else
             {
                 $this->context->controller->addJS($this->_path.'views/js/autosearch.js');
@@ -2498,7 +2526,7 @@ class Ets_marketplace extends PaymentModule
             {
                 $this->context->controller->registerJavascript('modules-ets_marketplace-stick','modules/'.$this->name.'/views/js/slick.min.js', ['position' => 'bottom', 'priority' => 150]);
                 $this->context->controller->registerJavascript('modules-ets_marketplace-follow','modules/'.$this->name.'/views/js/product_follow.js', ['position' => 'bottom', 'priority' => 150]);
-            } 
+            }
             else
             {
                 $this->context->controller->addJS($this->_path.'views/js/slick.min.js');
@@ -2518,7 +2546,7 @@ class Ets_marketplace extends PaymentModule
                 $this->context->controller->registerJavascript('modules-ets_marketplace-cart','modules/'.$this->name.'/views/js/cart.js', ['position' => 'bottom', 'priority' => 153]);
             else
                 $this->context->controller->addJS($this->_path.'views/js/cart.js');
-            
+
         }
         $this->context->smarty->assign(
             array(
@@ -2554,7 +2582,7 @@ class Ets_marketplace extends PaymentModule
                             $setting['name'] => Configuration::get($setting['name']) ? : (isset($setting['default']) ? $setting['default']:'' ),
                         )
                     );
-                }    
+                }
             }
         }
         if(Configuration::get('ETS_MP_ENABLE_MAP') && Tools::getValue('module')==$this->name && (Tools::getValue('controller')=='shop' || Tools::getValue('controller')=='map'))
@@ -2577,7 +2605,7 @@ class Ets_marketplace extends PaymentModule
                 {
                     $this->context->controller->addJS($link_map_google);
                     $this->context->controller->addJS($this->_path.'views/js/map.js');
-                }              
+                }
             }
             $this->context->controller->addCSS($this->_path.'views/css/map.css');
         }
@@ -2606,12 +2634,12 @@ class Ets_marketplace extends PaymentModule
         }
         if($this->context->customer->logged)
         {
-            if($sellers = Db::getInstance()->executeS('SELECT seller.id_customer FROM 
+            if($sellers = Db::getInstance()->executeS('SELECT seller.id_customer FROM
             `'._DB_PREFIX_.'ets_mp_seller_customer_follow` scl
             INNER JOIN `'._DB_PREFIX_.'ets_mp_seller` seller ON (seller.id_seller=scl.id_seller AND seller.active=1)
             WHERE scl.id_customer="'.(int)$this->context->customer->id.'"'))
             {
-                
+
                 $id_sellers = array();
                 foreach($sellers as $seller)
                 {
@@ -2644,14 +2672,14 @@ class Ets_marketplace extends PaymentModule
                             LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.id_category = cl.id_category AND cl.id_lang="'.(int)$id_lang.'")
                             LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl') . ')'.'
                             LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = p.`id_product` AND i.cover=1)
-                            LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')	
+                            LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
                             LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-                            WHERE product_shop.active=1 AND sp.id_customer IN ('.implode(',',array_map('intval',$id_sellers)).') AND product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : ''); 
+                            WHERE product_shop.active=1 AND sp.id_customer IN ('.implode(',',array_map('intval',$id_sellers)).') AND product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
                     $sql .= ' GROUP BY p.id_product ORDER BY RAND() LIMIT 0,'.(int)$number_product;
                     $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, true);
                     if($products)
                     {
-                        $products = Product::getProductsProperties($id_lang, $products);        
+                        $products = Product::getProductsProperties($id_lang, $products);
                         if(version_compare(_PS_VERSION_, '1.7', '>=')) {
                             $products = Ets_marketplace::productsForTemplate($products);
                         }
@@ -2669,7 +2697,7 @@ class Ets_marketplace extends PaymentModule
                 }
                 if(Configuration::get('ETS_MP_DISPLAY_FOLLOWED_SHOP') && ($number_shop = (int)Configuration::get('ETS_MP_DISPLAY_NUMBER_SHOP')))
                 {
-                    $sql = 'SELECT s.*,CONCAT(c.firstname," ", c.lastname) as customer_name,sl.shop_name,sl.shop_address,sl.shop_description,top_order_seller.total_order,seller_product.total_product 
+                    $sql = 'SELECT s.*,CONCAT(c.firstname," ", c.lastname) as customer_name,sl.shop_name,sl.shop_address,sl.shop_description,top_order_seller.total_order,seller_product.total_product
                     FROM `'._DB_PREFIX_.'ets_mp_seller` s
                         LEFT JOIN (
                             SELECT seller.id_seller as id_seller,COUNT(DISTINCT seller_order.id_order) as total_order
@@ -2760,7 +2788,7 @@ class Ets_marketplace extends PaymentModule
                     'LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = p.`id_product`)'. Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover = 1') :
                     'LEFT JOIN `' . _DB_PREFIX_ . 'image_shop` image_shop ON (image_shop.`id_product` = p.`id_product` AND image_shop.id_shop=' . (int)$this->context->shop->id . ')'
                 ).'
-                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')	
+                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
                 WHERE '.($day ? 'o.date_add >="'.pSQL(date('Y-m-d', $date)).'"':'1').' AND  product_shop.`id_shop` = ' . (int)$this->context->shop->id
                 .($active ? ' AND product_shop.`active` = 1' : '')
@@ -2784,7 +2812,7 @@ class Ets_marketplace extends PaymentModule
         $this->context->smarty->assign(
             array(
                 'is17' => $this->is17,
-                'seller_account' => Tools::getValue('controller')!='myseller' && Tools::getValue('controller')!='contactseller' && Tools::getValue('controller')!='registration' ?  $this->context->link->getModuleLink($this->name,'myseller'):'', 
+                'seller_account' => Tools::getValue('controller')!='myseller' && Tools::getValue('controller')!='contactseller' && Tools::getValue('controller')!='registration' ?  $this->context->link->getModuleLink($this->name,'myseller'):'',
             )
         );
         return $this->display(__FILE__,'footer_my_account.tpl');
@@ -2852,7 +2880,7 @@ class Ets_marketplace extends PaymentModule
                             )
                         );
                         $sellers[$product['id_product']] = $this->context->smarty->fetch(_PS_MODULE_DIR_.$this->name.'/views/templates/hook/product/cart_detail.tpl');
-                        
+
                     }
                 }
             }
@@ -2904,7 +2932,7 @@ class Ets_marketplace extends PaymentModule
                             'order_seller' => $seller,
                         )
                     );
-                    return $this->display(__FILE__,'seller_order_invoice.tpl');                
+                    return $this->display(__FILE__,'seller_order_invoice.tpl');
                 }
             }
         }
@@ -2993,7 +3021,7 @@ class Ets_marketplace extends PaymentModule
             $cart_total = Tools::convertPrice($cart_total, null, false);
             if($commission_total_balance >0 && $cart_total >0 && $cart_total <= $commission_total_balance && (!$min_order_pay || $min_order_pay <= $cart_total) && (!$max_order_pay || $max_order_pay >=$cart_total))
             {
-                
+
                 $this->context->smarty->assign(
                     array(
                         'commission_total_balance' => Tools::displayPrice(Tools::convertPrice($commission_total_balance)),
@@ -3002,7 +3030,7 @@ class Ets_marketplace extends PaymentModule
                 return $this->display(__FILE__, 'payment.tpl');
             }
         }
-		
+
 	}
     public function hookPaymentReturn($params)
 	{
@@ -3126,10 +3154,10 @@ class Ets_marketplace extends PaymentModule
                     'going_to_be_expired' =>$going_to_be_expired,
                     'seller' => $seller,
                     'isManager' => $this->context->customer->id!= $seller->id_customer,
-                    'seller_billing' => $seller->id_billing ? (new Ets_mp_billing($seller->id_billing)) : false, 
+                    'seller_billing' => $seller->id_billing ? (new Ets_mp_billing($seller->id_billing)) : false,
                 )
             );
-            
+
         }
         if($tabs)
         {
@@ -3233,7 +3261,7 @@ class Ets_marketplace extends PaymentModule
         }
         else
             $product_features = array();
-        $features= Db::getInstance()->executeS('SELECT f.*,fl.name FROM `'._DB_PREFIX_.'feature` f 
+        $features= Db::getInstance()->executeS('SELECT f.*,fl.name FROM `'._DB_PREFIX_.'feature` f
                     INNER JOIN `'._DB_PREFIX_.'feature_shop` fs ON (fs.id_feature=f.id_feature AND fs.id_shop="'.(int)$this->context->shop->id.'")
                     LEFT JOIN `'._DB_PREFIX_.'ets_mp_feature_seller` sf ON (sf.id_feature= f.id_feature)
                     LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.id_feature = fl.id_feature AND fl.id_lang="'.(int)$this->context->language->id.'")
@@ -3253,7 +3281,7 @@ class Ets_marketplace extends PaymentModule
             return $this->display(__FILE__,'product/features.tpl');
         else
             return false;
-        
+
     }
     public function getBaseLink()
     {
@@ -3350,7 +3378,7 @@ class Ets_marketplace extends PaymentModule
             $sql = 'SELECT COUNT(DISTINCT o.id_order)';
         else
             $sql ='SELECT o.*,so.id_order as id_order_seller,CONCAT(customer.firstname, " ", customer.lastname) as seller_name,customer.id_customer as id_customer_seller, s.id_seller,CONCAT(c.firstname, " ", c.lastname) as customer_name,sl.*,sum(sc.commission) as total_commission,(sum(sc.total_price)-sum(sc.commission)) as admin_earned';
-        $sql .=' FROM `'._DB_PREFIX_.'orders` o 
+        $sql .=' FROM `'._DB_PREFIX_.'orders` o
         LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller_order` so ON (o.id_order=so.id_order)
         LEFT JOIN `'._DB_PREFIX_.'customer` customer ON(so.id_customer=customer.id_customer)
         LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller` s ON (s.id_customer=customer.id_customer AND s.id_shop="'.(int)$this->context->shop->id.'")
@@ -3410,14 +3438,14 @@ class Ets_marketplace extends PaymentModule
                 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.id_category = cl.id_category AND cl.id_lang="'.(int)$id_lang.'")
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl') . ')'.
                 'LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = p.`id_product` AND i.cover=1)
-                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')	
+                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
                 LEFT JOIN (
-                    SELECT r.id_product,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product!=0 GROUP BY r.id_product 
+                    SELECT r.id_product,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product!=0 GROUP BY r.id_product
                 ) seller_report ON (seller_report.id_product = sp.id_product)
                 WHERE product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id .($this->is17 ? ' AND p.state=1':''). ($filter ? $filter :'').'
                 '
-                . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : ''); 
+                . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
         if($total)
             return Db::getInstance()->getValue($sql);
         else
@@ -3430,7 +3458,7 @@ class Ets_marketplace extends PaymentModule
             Tools::orderbyPrice($products, 'asc');
         } elseif ($order_by == 'product_shop.price desc') {
             Tools::orderbyPrice($products, 'desc');
-        }   
+        }
         return $products;
     }
     public function checkListProductSeller($productList)
@@ -3599,7 +3627,7 @@ class Ets_marketplace extends PaymentModule
                 Configuration::get('ETS_MP_EMAIL_ADMIN_NOTIFICATION')?:Configuration::get('PS_SHOP_EMAIL'),
                 Configuration::get('PS_SHOP_PHONE'),
             );
-            return Tools::nl2br(str_replace($search,$replace,$text)); 
+            return Tools::nl2br(str_replace($search,$replace,$text));
         }
         return Tools::nl2br($text) ;
     }
@@ -3634,9 +3662,9 @@ class Ets_marketplace extends PaymentModule
 			FROM `' . _DB_PREFIX_ . 'customer_thread` ct
 			LEFT JOIN `' . _DB_PREFIX_ . 'customer_message` cm
 				ON ct.id_customer_thread = cm.id_customer_thread
-            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c 
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
                 ON ct.`id_customer` = c.`id_customer`
-            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e 
+            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
                 ON e.`id_employee` = cm.`id_employee`
 			WHERE ct.id_customer = ' . (int) $id_customer .
                 ' AND ct.`id_order` = ' . (int) $id_order . '
@@ -3664,7 +3692,7 @@ class Ets_marketplace extends PaymentModule
                         $message['efirstname'] = $seller['seller_name'];
                         $message['elastname']='(Seller)';
                     }
-                    
+
                 }
             }
         }
@@ -3672,8 +3700,60 @@ class Ets_marketplace extends PaymentModule
     }
     public function _runCronJob()
     {
+
+        // -- Update products --
+        $rows = Db::getInstance()->executeS('SELECT `id`,`seller`,`interval`, `source`, `last_update` FROM `'._DB_PREFIX_.'ets_mp_seller_product_source` ');
+        foreach ($rows as $row) {
+            $id = $row['id'];
+            $seller_id = $row['seller'];
+            $interval = $row['interval']*60;#*60;
+            $source = $row['source'];
+            $last_update = $row['last_update'];
+            file_put_contents('cronjob_log.txt', date('m/d/Y H:i:s')." Next: ".$source."\n", FILE_APPEND);
+            if (!$last_update or time() > $last_update + $interval) {
+                file_put_contents('cronjob_log.txt', date('m/d/Y H:i:s')." Load data from ".$source."\n", FILE_APPEND);
+
+                $productDataSource = new ProductDataSource($source);
+
+                $productData = $productDataSource->parseSource();
+
+                if (isset($productData['error']) and $productData['error']!='')
+                {
+                    $this->_errors[] = $productData['error'];
+                    $result = $productData;
+                }
+                else
+                {
+                    $updateProducts = new UpdateProducts($this->_getSeller(), $productData);
+
+                    $result = $updateProducts->go();
+
+                }
+
+                if ($result["error"]!='') {
+                    if ($this->module) $this->_errors[] = $this->module->l($result,'update');
+                    $message = 'Error:'.$result["error"];
+                    $sql = 'UPDATE `'._DB_PREFIX_.'ets_mp_seller_product_source` SET `result`=\''.$message.'\', `last_update` = \''.time().'\' WHERE `id`=\''.$id.'\'';
+                }
+                else {
+                    if ($this->module) $this->_success = $this->module->l('Products updated','update');
+                    $message = 'Success';
+                    $sql = 'UPDATE `'._DB_PREFIX_.'ets_mp_seller_product_source` SET `result`=\''.$message.'\', `last_update` = \''.time().'\' WHERE `id`=\''.$id.'\'';
+                }
+
+                Db::getInstance()->execute($sql);
+
+                file_put_contents('cronjob_log.txt',$message."\r\n", FILE_APPEND);
+
+                $ok = true;
+            }
+
+        }
+        // -------------
+
         $commissions_expired = Db::getInstance()->executeS('SELECT id_seller_commission FROM `'._DB_PREFIX_.'ets_mp_seller_commission` WHERE status=-1 AND expired_date!="0000-00-00 00:00:00" AND expired_date <="'.pSQL(date('Y-m-d H:i:s')).'"');
-        $ok=false;
+        #if (!$ok)
+            $ok=false;
         if($commissions_expired)
         {
             foreach($commissions_expired as $commission)
@@ -3749,7 +3829,7 @@ class Ets_marketplace extends PaymentModule
                             $seller_class->update();
                         }
                     }
-                    
+
                 }
             }
             $ok= true;
@@ -3900,7 +3980,6 @@ class Ets_marketplace extends PaymentModule
         }
         return $array;
     }
-
     public function getYearRanger($start, $end, $format = 'Y', $list_data_by_date = false)
     {
 
@@ -3941,7 +4020,7 @@ class Ets_marketplace extends PaymentModule
                     else
                         return $this->display(__FILE__,'product/products_other16.tpl');
                 }
-                
+
             }
         }
         return '';
@@ -4047,7 +4126,7 @@ class Ets_marketplace extends PaymentModule
     {
         return $this->hookDisplayCartExtraProductActions($params);
     }
-    
+
     private function duplicateRowsFromDefaultShopLang($tableName, $shopId,$identifier)
     {
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT');
@@ -4172,13 +4251,13 @@ class Ets_marketplace extends PaymentModule
             INNER JOIN `'._DB_PREFIX_.'customer_message` cm ON (cm.id_customer_thread=ct.id_customer_thread)
             INNER JOIN (SELECT id_customer_thread,max(id_customer_message) as id_customer_message_max FROM `'._DB_PREFIX_.'customer_message` group by id_customer_thread) last_message ON (last_message.id_customer_message_max=cm.id_customer_message AND last_message.id_customer_thread=ct.id_customer_thread)
             INNER JOIN `'._DB_PREFIX_.'orders` o ON (ct.id_order=o.id_order)
-            INNER JOIN `'._DB_PREFIX_.'ets_mp_seller_order` so ON (o.id_order=so.id_order)  
+            INNER JOIN `'._DB_PREFIX_.'ets_mp_seller_order` so ON (o.id_order=so.id_order)
             LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=ct.id_customer)
             LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee=cm.id_employee)
             LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller_customer_message` scm ON (scm.id_customer_message=cm.id_customer_message)
             LEFT JOIN `'._DB_PREFIX_.'customer` manager ON (manager.id_customer=scm.id_manager)
             LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller` seller ON (seller.id_customer=scm.id_customer)
-            LEFT JOIN `'._DB_PREFIX_.'customer` customer ON (customer.id_customer=seller.id_customer)   
+            LEFT JOIN `'._DB_PREFIX_.'customer` customer ON (customer.id_customer=seller.id_customer)
             WHERE so.id_customer="'.(int)$seller->id_customer.'" GROUP BY o.id_order';
             $sql2 = 'SELECT contact.id_order,contact.id_contact,cm.title as title_contact,o.reference,cm.read,cm.message,cm.id_employee,cm.id_seller,cm.date_add,CONCAT(manager.firstname," ",manager.lastname) as manager_name,CONCAT(customer.firstname," ",customer.lastname) as seller_name,if(contact.id_customer!=0,CONCAT(c.firstname," ",c.lastname),contact.name) as customer_name, CONCAT(e.firstname," ",e.lastname) as employee_name
             FROM `'._DB_PREFIX_.'ets_mp_seller_contact` contact
@@ -4220,7 +4299,7 @@ class Ets_marketplace extends PaymentModule
         else
             return false;
     }
-   
+
     public function checkCreatedColumn($table,$column)
     {
         $fieldsCustomers = Db::getInstance()->ExecuteS('DESCRIBE '._DB_PREFIX_.pSQL($table));
@@ -4231,7 +4310,7 @@ class Ets_marketplace extends PaymentModule
             {
                 $check_add=true;
                 break;
-            }    
+            }
         }
         return $check_add;
     }
@@ -4271,7 +4350,7 @@ class Ets_marketplace extends PaymentModule
                 }
             }
         }
-        
+
     }
     public function getTextLang($text, $lang,$file_name='')
     {

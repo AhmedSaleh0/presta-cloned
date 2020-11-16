@@ -5,9 +5,9 @@
  * NOTICE OF LICENSE
  *
  * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+ * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
  * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- * 
+ *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -33,7 +33,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
     public $seller_product_types = array();
     public function __construct()
 	{
-		parent::__construct();                
+		parent::__construct();
         $this->display_column_right=false;
         $this->display_column_left =false;
         $this->seller_product_information = explode(',',Configuration::get('ETS_MP_SELLER_ALLOWED_INFORMATION_SUBMISSION'));
@@ -147,7 +147,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         if(Tools::isSubmit('submitDeletecombinations') && $attributes= Tools::getValue('list_product_attributes'))
         {
             $this->submitDeletecombinations($attributes);
-            
+
         }
         if(Tools::isSubmit('submitSavecombinations') && $attributes= Tools::getValue('list_product_attributes'))
         {
@@ -252,10 +252,10 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     Tools::jsonEncode(
                         array(
                             'errors' => $this->module->l('An error occurred while deleting the attribute','products'),
-                        )  
+                        )
                     )
                 );
-            }    
+            }
         }
         else
         {
@@ -263,7 +263,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 Tools::jsonEncode(
                     array(
                         'errors' => $this->module->l('You do not have permission','products'),
-                    )  
+                    )
                 )
             );
         }
@@ -293,7 +293,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     )
                 );
             }
-            
+
         }
         else
         {
@@ -375,8 +375,8 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     $errors[] = sprintf($this->module->l('Product(#%d) is not valid','products'),$id_product);
                 $this->context->cookie->success_message = $this->module->l('Product(s) successfully deleted.','products');
               break;
-            } 
-            
+            }
+
         }
         else
         {
@@ -469,7 +469,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     {
                         $combination->low_stock_threshold = (int)$data['low_stock_threshold'];
                         $combination->low_stock_alert = isset($data['low_stock_alert'])? (int)$data['low_stock_alert']:0;
-                    }    
+                    }
                     if($combination->update())
                         StockAvailable::setQuantity($this->product->id, (int)$id_product_attribute, $combination->quantity);
                 }
@@ -530,7 +530,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             if(isset($combinations_attribute_default[$id_product_attribute]))
                                 $combination->default_on = (int)$combinations_attribute_default[$id_product_attribute];
                             else
-                                $combination->default_on=0; 
+                                $combination->default_on=0;
                             if(isset($combinations_attribute_quantity[$id_product_attribute]) && Validate::isUnsignedInt($combinations_attribute_quantity[$id_product_attribute]))
                                 $combination->quantity = (int)$combinations_attribute_quantity[$id_product_attribute];
                             else
@@ -573,15 +573,15 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             if(isset($combinations_attribute_unity[$id_product_attribute]) && Validate::isNegativePrice($combinations_attribute_unity[$id_product_attribute]))
                                 $combination->unit_price_impact = $combinations_attribute_unity[$id_product_attribute];
                             else
-                                $combination->unit_price_impact = 0; 
+                                $combination->unit_price_impact = 0;
                             if(isset($combinations_attribute_weight[$id_product_attribute]) && Validate::isUnsignedFloat($combinations_attribute_weight[$id_product_attribute]))
-                                $combination->weight = (float)$combinations_attribute_weight[$id_product_attribute]; 
+                                $combination->weight = (float)$combinations_attribute_weight[$id_product_attribute];
                             else
-                                $combination->weight =0; 
+                                $combination->weight =0;
                             if(isset($combinations_attribute_isbn[$id_product_attribute]) && Validate::isIsbn($combinations_attribute_isbn[$id_product_attribute]))
                                 $combination->isbn = $combinations_attribute_isbn[$id_product_attribute];
                             else
-                                $combination->isbn=''; 
+                                $combination->isbn='';
                             if(isset($combinations_attribute_ean13[$id_product_attribute]) && Validate::isEan13($combinations_attribute_ean13[$id_product_attribute]))
                                 $combination->ean13 = $combinations_attribute_ean13[$id_product_attribute];
                             else
@@ -604,9 +604,9 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                                             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_attribute_image`(id_product_attribute,id_image) VALUES("'.(int)$id_product_attribute.'","'.(int)$id_image.'")');
                                     }
                                 }
-                            }               
+                            }
                         }
-                    } 
+                    }
                 }
                 else
                 {
@@ -681,7 +681,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             $uploadable_files +=1;
                         if(isset($custom_field['required']))
                             $customizationField->required = $custom_field['required'];
-                        else    
+                        else
                             $customizationField->required = 0;
                         if($customizationField->id)
                         {
@@ -734,7 +734,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     )
                 );
             }
-            
+
         }
         else
         {
@@ -823,7 +823,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             )
                         )
                     );
-            
+
         }
         else
         {
@@ -898,7 +898,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'errors' => $this->module->displayError($this->module->l('Product is null','products')),
                     )
                 )
-            );   
+            );
         }
     }
     public function getPriceInclTax()
@@ -941,7 +941,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         )
                     )
                 );
-            }                
+            }
         }
         die(
             Tools::jsonEncode(
@@ -970,7 +970,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     array(
                         'errors' => $this->module->l('You do not have permission to enable this product','products'),
                     )
-                )  
+                )
             );
         }
         $product = new Product($id_product);
@@ -986,7 +986,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'success' => $this->module->l('Updated successfully','products'),
                         'enabled' => 1,
                     )
-                )  
+                )
             );
         }
         else
@@ -999,7 +999,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'success' => $this->module->l('Updated successfully','products'),
                         'enabled' => 0,
                     )
-                )  
+                )
             );
         }
     }
@@ -1018,7 +1018,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 }
                 else
                     $html_content = '';
-            }    
+            }
             else
             {
                 if(!Configuration::get('ETS_MP_ALLOW_SELLER_EDIT_PRODUCT'))
@@ -1108,7 +1108,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     )
                 ),
             );
-            
+
             //if(!Configuration::get('ETS_MP_SELLER_ALLOWED_INFORMATION_SUBMISSION') || (Configuration::get('ETS_MP_SELLER_ALLOWED_INFORMATION_SUBMISSION') && !in_array('product_reference',explode(',',Configuration::get('ETS_MP_SELLER_ALLOWED_INFORMATION_SUBMISSION')))))
             //    unset($fields_list['reference']);
             //Filter
@@ -1187,12 +1187,12 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         break;
                 }
                 if($sort && ($sort_type=Tools::getValue('sort_type','desc')) && in_array($sort_type,array('asc','desc')))
-                    $sort .= ' '.trim($sort_type);  
+                    $sort .= ' '.trim($sort_type);
             }
             //Paggination
             $page = (int)Tools::getValue('page') && (int)Tools::getValue('page') > 0 ? (int)Tools::getValue('page') : 1;
             $totalRecords = (int) $this->seller->getProducts($filter,0,0,'',true);
-            $paggination = new Ets_mp_paggination_class();            
+            $paggination = new Ets_mp_paggination_class();
             $paggination->total = $totalRecords;
             $paggination->url =$this->context->link->getModuleLink($this->module->name,'products',array('list'=>true, 'page'=>'_page_')).$this->module->getFilterParams($fields_list,'mp_front_products');
             $paggination->limit =  10;
@@ -1215,7 +1215,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         $product['id_image'] = Db::getInstance()->getValue('SELECT id_image FROM `'._DB_PREFIX_.'image` WHERE id_product='.(int)$product['id_product']);
                     if($product['id_image'])
                     {
-                        
+
                         $product['image'] = '<'.'a hr'.'ef="'.$product['child_view_url'].'" target="_blank"><i'.'mg src="'.$this->context->link->getImageLink($product['link_rewrite'],$product['id_image'],$type_image).'" style="width:80px;"><'.'/'.'a'.'>';
                     }
                     else
@@ -1260,8 +1260,9 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 'link_new' => $this->context->link->getModuleLink($this->module->name,'products',array('addnew'=>1)),
                 'link_export' => Configuration::get('ETS_MP_SELLER_ALLOWED_IMPORT_EXPORT_PRODUCTS')? $this->context->link->getModuleLink($this->module->name,'products',array('export'=>1)): false,
                 'link_import' =>Configuration::get('ETS_MP_SELLER_ALLOWED_IMPORT_EXPORT_PRODUCTS') && Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT') ? $this->context->link->getModuleLink($this->module->name,'import'): false,
+                'link_update' =>Configuration::get('ETS_MP_SELLER_ALLOWED_IMPORT_EXPORT_PRODUCTS') && Configuration::get('ETS_MP_ALLOW_SELLER_CREATE_PRODUCT') ? $this->context->link->getModuleLink($this->module->name,'update'): false,
                 'sort_type' => Tools::getValue('sort_type','desc'),
-            );          
+            );
             $html_content = ($this->context->cookie->success_message ? $this->module->displayConfirmation($this->context->cookie->success_message):'').$this->_renderFormBulkProduct().($this->seller->vacation_mode && $this->seller->vacation_type=='disable_product'  ? $this->module->displayWarning($this->module->l('Your shop is in vacation mode. All your products have been disabled and cannot be enabled until your shop is back to online','products')):'').$this->module->renderList($listData);
             $this->context->cookie->success_message ='';
         }
@@ -1269,13 +1270,13 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             array(
                 'html_content' => $html_content,
                 'path' => $this->module->getBreadCrumb(),
-                'breadcrumb' => $this->module->is17 ? $this->module->getBreadCrumb() : false, 
+                'breadcrumb' => $this->module->is17 ? $this->module->getBreadCrumb() : false,
             )
         );
         if($this->module->is17)
-            $this->setTemplate('module:'.$this->module->name.'/views/templates/front/products.tpl');      
-        else        
-            $this->setTemplate('products_16.tpl'); 
+            $this->setTemplate('module:'.$this->module->name.'/views/templates/front/products.tpl');
+        else
+            $this->setTemplate('products_16.tpl');
     }
     public function checkDeleteProduct()
     {
@@ -1287,7 +1288,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             return true;
         else
             return false;
-            
+
     }
     public function renderProductForm()
     {
@@ -1307,10 +1308,10 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             if(isset($this->product->delivery_in_stock))
                 $valueFieldPost['delivery_in_stock'][$language['id_lang']]=Tools::getValue('delivery_in_stock_'.(int)$language['id_lang'],$this->product->delivery_in_stock[$language['id_lang']]);
             $valueFieldPost['delivery_in_stock'][$language['id_lang']]=Tools::getValue('delivery_in_stock_'.(int)$language['id_lang']);
-            if(isset($this->product->delivery_out_stock))                            
+            if(isset($this->product->delivery_out_stock))
                 $valueFieldPost['delivery_out_stock'][$language['id_lang']]=Tools::getValue('delivery_out_stock_'.(int)$language['id_lang'],$this->product->delivery_out_stock[$language['id_lang']]);
             else
-                $valueFieldPost['delivery_out_stock'][$language['id_lang']]=Tools::getValue('delivery_out_stock_'.(int)$language['id_lang']);                            
+                $valueFieldPost['delivery_out_stock'][$language['id_lang']]=Tools::getValue('delivery_out_stock_'.(int)$language['id_lang']);
         }
         $valueFieldPost['id_tax_rules_group'] = $this->product->id_tax_rules_group;
         if($this->product->id)
@@ -1408,7 +1409,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             foreach($categories as $category)
                 $selected_categories[]=$category['id_category'];
         }
-        $manufacturers = Db::getInstance()->executeS('SELECT m.id_manufacturer as id, m.name,manu_seller.id_customer 
+        $manufacturers = Db::getInstance()->executeS('SELECT m.id_manufacturer as id, m.name,manu_seller.id_customer
         FROM `'._DB_PREFIX_.'manufacturer` m
         INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON (m.id_manufacturer=ms.id_manufacturer AND ms.id_shop="'.(int)$this->context->shop->id.'")
         LEFT JOIN `'._DB_PREFIX_.'ets_mp_manufacturer_seller` manu_seller ON (manu_seller.id_manufacturer=m.id_manufacturer)
@@ -1441,7 +1442,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     ),
                 )
             )
-            
+
         );
         if(in_array('short_description',$this->seller_product_information))
             $fields[]= array(
@@ -1563,7 +1564,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         );
         return $this->context->smarty->fetch(_PS_MODULE_DIR_.$this->module->name.'/views/templates/hook/product/quantities.tpl');
     }
-    
+
     public function renderFormCombinations()
     {
         $product_types = Configuration::get('ETS_MP_SELLER_PRODUCT_TYPE_SUBMIT') ? explode(',',Configuration::get('ETS_MP_SELLER_PRODUCT_TYPE_SUBMIT')):array();
@@ -1677,7 +1678,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             {
                 foreach($productAttributes as &$productattribute)
                 {
-                    
+
                     $productattribute['name_attribute'] = $this->module->getProductAttributeName($productattribute['id_product_attribute']);
                     $attribute_images = Db::getInstance()->executeS('SELECT id_image FROM `'._DB_PREFIX_.'product_attribute_image` WHERE id_product_attribute='.(int)$productattribute['id_product_attribute']);
                     $productattribute['images'] = array();
@@ -1756,7 +1757,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         $specific_prices = Db::getInstance()->executeS('
             SELECT sp.*,cul.name as currency_name, col.name as country_name, gl.name as group_name,CONCAT(c.firstname," ",c.lastname) as customer_name FROM `'._DB_PREFIX_.'specific_price` sp
             LEFT JOIN '._DB_PREFIX_.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'currency_lang':'currency').' cul ON (cul.id_currency= sp.id_currency '.(version_compare(_PS_VERSION_, '1.7.6.0', '>=') ? ' AND cul.id_lang ="'.(int)$this->context->language->id.'"':'').')
-            LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'") 
+            LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'")
             LEFT JOIN `'._DB_PREFIX_.'group_lang` gl ON (gl.id_group=sp.id_group AND gl.id_lang="'.(int)$this->context->language->id.'")
             LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=sp.id_customer)
             WHERE sp.id_product='.(int)$this->product->id.' ORDER BY sp.id_specific_price asc');
@@ -1767,7 +1768,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 if($specific_price['id_product_attribute'])
                 {
                     $specific_price['attribute_name'] = $this->module->getProductAttributeName($specific_price['id_product_attribute']);
-                    
+
                 }
                 if($specific_price['price']>=0)
                 {
@@ -1800,7 +1801,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         $countries = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'country` c
             INNER JOIN `'._DB_PREFIX_.'country_shop` cs ON (c.id_country = cs.id_country AND cs.id_shop="'.(int)$this->context->shop->id.'")
             LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.id_country= cl.id_country AND cl.id_lang ="'.(int)$this->context->language->id.'")
-            WHERE c.active=1    
+            WHERE c.active=1
         ');
         $groups = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'group` g
             INNER JOIN `'._DB_PREFIX_.'group_shop` gs ON (g.id_group = gs.id_group AND gs.id_shop="'.(int)$this->context->shop->id.'")
@@ -1813,7 +1814,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         {
             foreach($productAttributes as &$productattribute)
             {
-                
+
                 $productattribute['name_attribute'] = $this->module->getProductAttributeName($productattribute['id_product_attribute']);
                 $attribute_images = Db::getInstance()->executeS('SELECT id_image FROM `'._DB_PREFIX_.'product_attribute_image` WHERE id_product_attribute='.(int)$productattribute['id_product_attribute']);
                 $productattribute['images'] = array();
@@ -1860,13 +1861,13 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         }
         else
         {
-            $sql ='SELECT * FROM `'._DB_PREFIX_.'specific_price` 
-            WHERE `id_product`="'.(int)$this->product->id.'" 
-            AND `id_currency`="'.(int)Tools::getValue('specific_price_id_currency').'" 
-            AND `id_group`="'.(int)Tools::getValue('specific_price_id_group').'" 
-            AND `id_country`="'.(int)Tools::getValue('specific_price_id_country').'" 
+            $sql ='SELECT * FROM `'._DB_PREFIX_.'specific_price`
+            WHERE `id_product`="'.(int)$this->product->id.'"
+            AND `id_currency`="'.(int)Tools::getValue('specific_price_id_currency').'"
+            AND `id_group`="'.(int)Tools::getValue('specific_price_id_group').'"
+            AND `id_country`="'.(int)Tools::getValue('specific_price_id_country').'"
             AND `id_product_attribute`= "'.(int)Tools::getValue('specific_price_id_product_attribute').'"
-            AND `id_customer`= "'.(int)Tools::getValue('specific_price_id_customer').'" 
+            AND `id_customer`= "'.(int)Tools::getValue('specific_price_id_customer').'"
             AND `from` = "'.(Tools::getValue('specific_price_from') ? pSQL(Tools::getValue('specific_price_from')):'0000-00-00 00:00:00' ).'"
             AND `to`= "'.(Tools::getValue('specific_price_to') ? pSQL(Tools::getValue('specific_price_to')):'0000-00-00 00:00:00' ).'"
             AND `from_quantity`="'.(int)Tools::getValue('specific_price_from_quantity').'"';
@@ -1937,14 +1938,14 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             $specific = Db::getInstance()->getRow('
                 SELECT sp.*,cul.name as currency_name, col.name as country_name, gl.name as group_name,CONCAT(c.firstname," ",c.lastname) as customer_name FROM `'._DB_PREFIX_.'specific_price` sp
                 LEFT JOIN '._DB_PREFIX_.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'currency_lang':'currency').' cul ON (cul.id_currency= sp.id_currency '.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'AND cul.id_lang="'.(int)$this->context->language->id.'"':'').')
-                LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'") 
+                LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'")
                 LEFT JOIN `'._DB_PREFIX_.'group_lang` gl ON (gl.id_group=sp.id_group AND gl.id_lang="'.(int)$this->context->language->id.'")
                 LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=sp.id_customer)
                 WHERE sp.id_product='.(int)$this->product->id.' AND sp.id_specific_price = "'.(int)$specific_price->id.'"');
             if($specific['id_product_attribute'])
             {
                 $specific['attribute_name'] = $this->module->getProductAttributeName($specific['id_product_attribute']);
-                
+
             }
             if($specific['price']>=0)
             {
@@ -1952,7 +1953,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             }
             else
                 $specific['price_text'] ='--';
-           
+
             if($specific['reduction_type']=='amount')
             {
                 $specific['reduction'] = Tools::displayPrice($specific['reduction'],new Currency(Configuration::get('PS_CURRENCY_DEFAULT'))).($specific['reduction_tax'] ? ' ('.$this->module->l('Tax incl.','products').')':' ('.$this->module->l('Tax excl.','products').')');
@@ -1980,7 +1981,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 )
             );
         }
-            
+
     }
     public function _checkValidateProduct()
     {
@@ -2046,9 +2047,9 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             if(Tools::getValue('meta_description_'.$language['id_lang']) && !Validate::isCleanHtml(Tools::getValue('meta_description_'.$language['id_lang'])))
                 $this->errors[] = $this->module->l('Meta description is not valid in','products').' '.$language['iso_code'];
             if(Tools::getValue('delivery_in_stock_'.$language['id_lang']) && !Validate::isCleanHtml(Tools::getValue('delivery_in_stock_'.$language['id_lang'])))
-                $this->errors[] = $this->module->l('Time delivery in stock is not valid in','products').' '.$language['iso_code'];  
+                $this->errors[] = $this->module->l('Time delivery in stock is not valid in','products').' '.$language['iso_code'];
             if(Tools::getValue('delivery_out_stock_'.$language['id_lang']) && !Validate::isCleanHtml(Tools::getValue('delivery_out_stock_'.$language['id_lang'])))
-                $this->errors[] = $this->module->l('Time delivery out stock is not valid in','products').' '.$language['iso_code'];      
+                $this->errors[] = $this->module->l('Time delivery out stock is not valid in','products').' '.$language['iso_code'];
         }
         if(trim(Tools::getValue('price_excl'))==='')
         {
@@ -2135,9 +2136,9 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             $this->errors[] = sprintf($this->module->l('Quantity of pack item #%s is required','products'),$inputPackItem);
                         elseif($quantity_item && !Validate::isUnsignedInt($quantity_item))
                             $this->errors[] = sprintf($this->module->l('Quantity of pack item #%s is not valid','products'),$inputPackItem);
-                        
+
                     }
-                    
+
                 }
             }
         }
@@ -2164,7 +2165,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     }
                 }
             }
-             
+
         }
         if(Tools::isSubmit('submitCreateCombination') && ($attribute_options = Tools::getValue('attribute_options')))
         {
@@ -2175,7 +2176,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             {
                 foreach($attribute_options as $id_attribute_group => $id_attributes)
                 {
-                    
+
                     if(!$id_attribute_group || !$id_attributes)
                     {
                         $this->errors[] = $this->module->l('Attribute options is not valid','products');
@@ -2192,8 +2193,8 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             if(($attributeGroup = new AttributeGroup($id_attribute_group)) && ($attribute = new Attribute($id_attribute)) && (!Validate::isLoadedObject($attributeGroup) || !Validate::isLoadedObject($attribute) || $attribute->id_attribute_group!= $id_attribute_group || !$this->seller->checkHasAttributeGroup($id_attribute_group)))
                                 $this->errors[] = sprintf($this->module->l('Attribute #%d is not valid','products'),$attribute->id_attribute_group);
                         }
-                        
-                            
+
+
                     }
                 }
             }
@@ -2208,7 +2209,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 {
                     if($selectedCarrier && ($carrier = new Carrier($selectedCarrier)) && (!Validate::isLoadedObject($carrier) || !$this->seller->getListCarriersUser($selectedCarrier)))
                         $this->errors[] = sprintf($this->module->l('Carrier (#%d) is not valid','products'),$selectedCarrier);
-                    
+
                 }
             }
         }
@@ -2253,7 +2254,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             $this->product->cache_is_pack=1;
         else
             $this->product->cache_is_pack=0;
-        if(in_array('product_reference',$this->seller_product_information))    
+        if(in_array('product_reference',$this->seller_product_information))
         {
             $this->product->reference = Tools::getValue('reference');
         }
@@ -2344,8 +2345,8 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'specific'=>'products'
                     );
                     Ets_marketplace::sendMail('to_admin_new_product_uploaded',$data,'',$subjects);
-                    
-                    
+
+
                 }
             }
         }
@@ -2403,7 +2404,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 }
             }
             return $this->product->update();
-        }    
+        }
         return $this->product->id;
     }
     public function _submitCreateCombination()
@@ -2439,7 +2440,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             } else {
                 $tab = array_values(Tools::getValue('attribute_options'));
                 if (count($tab) && Validate::isLoadedObject($this->product)) {
-                    
+
                     Ets_MarketPlaceProductsModuleFrontController::setAttributesImpacts($this->product->id, $tab);
                     $this->combinations = array_values(Ets_MarketPlaceProductsModuleFrontController::createCombinations($tab));
                     $values = array_values(array_map(array($this, 'addAttribute'), $this->combinations));
@@ -2450,9 +2451,9 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
                         }
                     }
-    
+
                     SpecificPriceRule::disableAnyApplication();
-    
+
                     //$this->product->deleteProductAttributes();
                     $this->product->generateMultipleCombinations($values, $this->combinations);
                     // Reset cached default attribute for the product and get a new one
@@ -2479,7 +2480,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     } else {
                         StockAvailable::synchronize($this->product->id);
                     }
-    
+
                     SpecificPriceRule::enableAnyApplication();
                     SpecificPriceRule::applyAllRules(array((int)$this->product->id));
                 } else {
@@ -2680,7 +2681,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                     $this->errors[] = $validate;
                 }
-    
+
                 if ($this->errors) {
                     continue;
                 }
@@ -2707,7 +2708,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                                 $this->errors[] = $this->module->l('An error occurred while copying the image.','products');
                                 break;
                         }
-    
+
                         continue;
                     } else {
                         $imagesTypes = ImageType::getImagesTypes('products');
@@ -2717,7 +2718,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                                 $this->errors[] =$this->module->l('An error occurred while copying this image:','products').' ' . Tools::stripslashes($imageType['name']);
                                 continue;
                             }
-    
+
                             if ($generate_hight_dpi_images) {
                                 if (!ImageManager::resize($file['save_path'], $new_path . '-' . Tools::stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
                                     $this->errors[] = $this->module->l('An error occurred while copying this image:','products') . ' ' . Tools::stripslashes($imageType['name']);
@@ -2726,7 +2727,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                             }
                         }
                     }
-    
+
                     unlink($file['save_path']);
                     unset($file['save_path']);
                     Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $this->product->id));
@@ -2769,7 +2770,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     }
                 }
             }
-            
+
         }
         return $files;
     }
@@ -2855,8 +2856,8 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         if($products)
         {
             ob_get_clean();
-            ob_start(); 
-            $file =dirname(__FILE__).'/../../'.date('Y-m-d').'-list-products.csv';    
+            ob_start();
+            $file =dirname(__FILE__).'/../../'.date('Y-m-d').'-list-products.csv';
             $fp = fopen($file, 'w');
             $header = array(
                 $this->module->l('Name','products'),
@@ -2880,12 +2881,12 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 $product[]=trim($row['price']);
                 $product[]=trim(str_replace(array("\t","\r\n","  "),' ',$row['description']));
                 $product[]= trim(str_replace(array("\t","\r\n","  "),' ',$row['description_short']));
-                $product[]=trim($row['link_rewrite']); 
+                $product[]=trim($row['link_rewrite']);
                 $product[] = trim($row['categories']);
                 $product[]= trim($row['id_category_default']);
                 $product[]=trim($row['product_attributes']);
                 $product[]=trim($row['specific_prices']);
-                fputcsv($fp, $product);             
+                fputcsv($fp, $product);
             }
             fclose($fp);
             header('Content-Description: File Transfer');
@@ -2987,7 +2988,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     {
                         $attachment->delete();
                         $errors[] = $this->module->l('An error occurred while saving the attachment');
-                    }    
+                    }
                 }
                 else
                     $errors[] = $this->module->l('An error occurred while saving the attachment');
@@ -3056,7 +3057,7 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         if(!Configuration::get('ETS_MP_ALLOW_SELLER_DELETE_PRODUCT'))
                             $error = $this->module->l('You do not have permission to delete product','products');
                   break;
-                } 
+                }
             }
             if($error)
             {
@@ -3074,6 +3075,6 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                     $this->errors[] = $error;
             }
         }
-        
+
     }
  }
