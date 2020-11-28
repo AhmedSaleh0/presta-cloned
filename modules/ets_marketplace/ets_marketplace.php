@@ -1209,7 +1209,6 @@ class Ets_marketplace extends PaymentModule
                 }
             }
         }
-
     }
     public function hookDisplayAdminProductsSeller($params)
     {
@@ -1708,7 +1707,6 @@ class Ets_marketplace extends PaymentModule
                     $errors[] = sprintf($this->l('The file name "%s" is too large. Limit: %s'),$file_name,Tools::ps_round($max_file_size/1048576,2).'Mb');
             }
         }
-
     }
     public function uploadFile($name,&$errors)
     {
@@ -2108,7 +2106,6 @@ class Ets_marketplace extends PaymentModule
             else
                 $this->changeCommissionWhenUpdateOrder($orderDetail);
         }
-
     }
     public function hookActionObjectOrderDetailAddAfter($params)
     {
@@ -2360,7 +2357,6 @@ class Ets_marketplace extends PaymentModule
 
 		return Language::getIsoById($id_lang).'/';
 	}
-
 	public function getBaseLinkFriendly($id_shop = null, $ssl = null)
 	{
 		static $force_ssl = null;
@@ -3030,7 +3026,6 @@ class Ets_marketplace extends PaymentModule
                 return $this->display(__FILE__, 'payment.tpl');
             }
         }
-
 	}
     public function hookPaymentReturn($params)
 	{
@@ -3281,7 +3276,6 @@ class Ets_marketplace extends PaymentModule
             return $this->display(__FILE__,'product/features.tpl');
         else
             return false;
-
     }
     public function getBaseLink()
     {
@@ -3402,6 +3396,8 @@ class Ets_marketplace extends PaymentModule
     }
     public function getSellerProducts($filter='',$page = 0, $per_page = 12, $order_by = 'p.id_product desc',$total=false)
     {
+        // return 555;
+        // file_put_contents('log.txt', "getSellerProducts"."\n", FILE_APPEND);
         $page = (int)$page;
         if ($page <= 0)
             $page = 1;
@@ -3451,6 +3447,10 @@ class Ets_marketplace extends PaymentModule
         else
             $sql .= ' GROUP BY p.id_product'.($order_by ? ' ORDER BY ' . pSQL($order_by): '').' LIMIT ' . (int)($page-1)*$per_page . ',' . (int)$per_page;
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, true);
+
+// file_put_contents('log.txt', $sql."\n", FILE_APPEND);
+
+
         if (!$products) {
             return array();
         }
@@ -4126,7 +4126,6 @@ class Ets_marketplace extends PaymentModule
     {
         return $this->hookDisplayCartExtraProductActions($params);
     }
-
     private function duplicateRowsFromDefaultShopLang($tableName, $shopId,$identifier)
     {
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT');
@@ -4299,7 +4298,6 @@ class Ets_marketplace extends PaymentModule
         else
             return false;
     }
-
     public function checkCreatedColumn($table,$column)
     {
         $fieldsCustomers = Db::getInstance()->ExecuteS('DESCRIBE '._DB_PREFIX_.pSQL($table));
@@ -4350,7 +4348,6 @@ class Ets_marketplace extends PaymentModule
                 }
             }
         }
-
     }
     public function getTextLang($text, $lang,$file_name='')
     {
@@ -4378,4 +4375,6 @@ class Ets_marketplace extends PaymentModule
         }
         return $text;
     }
+
+
 }
