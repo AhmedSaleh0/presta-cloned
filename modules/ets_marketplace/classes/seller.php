@@ -5,9 +5,9 @@
  * NOTICE OF LICENSE
  *
  * This file is not open source! Each license that you purchased is only available for 1 wesite only.
- * If you want to use this file on more websites (or projects), you need to purchase additional licenses. 
+ * If you want to use this file on more websites (or projects), you need to purchase additional licenses.
  * You are not allowed to redistribute, resell, lease, license, sub-license or offer our resources to any third party.
- * 
+ *
  * DISCLAIMER
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -74,20 +74,20 @@ class Ets_mp_seller extends ObjectModel
             'id_shop' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'id_billing' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
             'id_group' => array('type' => self::TYPE_INT, 'validate' => 'isunsignedInt'),
-            'shop_phone'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
+            'shop_phone'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
             'vat_number' => array('type'=> self::TYPE_STRING),
-            'shop_logo'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
-            'shop_banner'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true), 
-            'banner_url'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true), 
-            'link_facebook'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
-            'link_instagram'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
-            'link_google'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'), 
+            'shop_logo'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+            'shop_banner'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),
+            'banner_url'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),
+            'link_facebook'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+            'link_instagram'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+            'link_google'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
             'link_twitter'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
             'message_to_administrator' => array('type' =>   self::TYPE_STRING,'validate' => 'isCleanHtml'),
-            'reason' => array('type' =>   self::TYPE_STRING,'validate' => 'isCleanHtml'),  
-            'commission_rate' => array('type'=> self::TYPE_STRING), 
-            'auto_enabled_product' => array('type'=>self::TYPE_STRING), 
-            'code_chat' => array('type'=> self::TYPE_STRING), 
+            'reason' => array('type' =>   self::TYPE_STRING,'validate' => 'isCleanHtml'),
+            'commission_rate' => array('type'=> self::TYPE_STRING),
+            'auto_enabled_product' => array('type'=>self::TYPE_STRING),
+            'code_chat' => array('type'=> self::TYPE_STRING),
             'active' => array('type'=> self::TYPE_INT),
             'mail_expired' => array('type'=> self::TYPE_INT),
             'mail_wait_pay' => array('type'=> self::TYPE_INT),
@@ -103,12 +103,12 @@ class Ets_mp_seller extends ObjectModel
             'vacation_mode' => array('type'=>self::TYPE_INT),
             'vacation_type' => array('type'=>self::TYPE_STRING),
             'date_from' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'date_to' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),  
+            'date_to' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
             'date_add' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
-            'date_upd' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),  
-            'shop_name' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),            
+            'date_upd' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml'),
+            'shop_name' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),
             'shop_description' =>	array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),
-            'shop_address'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),   
+            'shop_address'  => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml','lang'=>true),
             'vacation_notifications' => array('type'=>self::TYPE_STRING,'lang'=>true),
         )
 	);
@@ -211,7 +211,7 @@ class Ets_mp_seller extends ObjectModel
                     INNER JOIN `'._DB_PREFIX_.'product` p ON (sp.id_product= p.id_product AND p.active=1) GROUP BY sp.id_customer
                 ) seller_product ON (seller_product.id_customer=s.id_customer)
                 LEFT JOIN (
-                    SELECT r.id_seller,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product=0 GROUP BY r.id_seller 
+                    SELECT r.id_seller,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product=0 GROUP BY r.id_seller
                 ) seller_report ON (seller_report.id_seller=s.id_seller)
                 LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller_group_lang` seller_group_lang ON (seller_group_lang.id_ets_mp_seller_group = s.id_group AND seller_group_lang.id_lang="'.(int)Context::getContext()->language->id.'")
                 '.(isset($sql_avg) ? ' LEFT JOIN ('.$sql_avg.') seller_rate ON (seller_rate.id_customer = s.id_customer)':'').'
@@ -229,7 +229,7 @@ class Ets_mp_seller extends ObjectModel
                     INNER JOIN `'._DB_PREFIX_.'product` p ON (sp.id_product= p.id_product AND p.active=1) GROUP BY sp.id_customer
                 ) seller_product ON (seller_product.id_customer=s.id_customer)
                 LEFT JOIN (
-                    SELECT r.id_seller,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product=0 GROUP BY r.id_seller 
+                    SELECT r.id_seller,COUNT(r.id_customer) as total_reported FROM `'._DB_PREFIX_.'ets_mp_seller_report` r WHERE id_product=0 GROUP BY r.id_seller
                 ) seller_report ON (seller_report.id_seller=s.id_seller)
                 LEFT JOIN (
                     SELECT sp.id_customer,SUM(ps.quantity) as total_sale FROM '._DB_PREFIX_.'product_sale ps
@@ -260,7 +260,7 @@ class Ets_mp_seller extends ObjectModel
             $order_way = null;
             $order_by = null;
         }
-        
+
         if($total)
             return $this->getListNewProducts($filter,(int) $this->context->language->id, $page, (int)$per_page,$total);
         elseif($listIds)
@@ -428,7 +428,7 @@ class Ets_mp_seller extends ObjectModel
         if($listIds)
             return $result;
         if(version_compare(_PS_VERSION_, '1.7', '>='))
-            return Ets_marketplace::productsForTemplate($result);                    
+            return Ets_marketplace::productsForTemplate($result);
 		return $result;
     }
     public function getBestSalesLight($filter='',$idLang, $pageNumber = 0, $nbProducts = 10,$order_by='ps.quantity DESC',$total=false,$listIds= false)
@@ -451,9 +451,9 @@ class Ets_mp_seller extends ObjectModel
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
 			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
 			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity';
-   
+
 		$sql .=' FROM `' . _DB_PREFIX_ . 'product_sale` ps
-        
+
 		LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
         LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.id_product=p.id_product)
 		' . Shop::addSqlAssociation('product', 'p') . '
@@ -490,7 +490,7 @@ class Ets_mp_seller extends ObjectModel
             $sql .= $filter;
         if($total)
         {
-            
+
             return Db::getInstance()->getValue($sql);
         }
         elseif($listIds)
@@ -505,7 +505,7 @@ class Ets_mp_seller extends ObjectModel
         }
         $sql .= ' GROUP BY p.id_product
 		ORDER BY '.($order_by ? $order_by :'ps.quantity DESC').'
-        
+
 		LIMIT ' . (int) (($pageNumber-1) * $nbProducts) . ', ' . (int) $nbProducts;
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
             return false;
@@ -767,9 +767,9 @@ class Ets_mp_seller extends ObjectModel
                 LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.id_category = cl.id_category AND cl.id_lang="'.(int)$id_lang.'")
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl') . ')'.
                 ' LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.id_product=p.id_product AND i.cover=1)
-                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')	
+                LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
                 LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-                WHERE sp.id_customer="'.(int)$this->id_customer.'" '.($active ? ' AND product_shop.active=1':'').' AND product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : ''); 
+                WHERE sp.id_customer="'.(int)$this->id_customer.'" '.($active ? ' AND product_shop.active=1':'').' AND product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
         if($total)
         {
             $sql .= $filter ? $filter :'';
@@ -802,7 +802,7 @@ class Ets_mp_seller extends ObjectModel
         }
         if($full)
         {
-            $products = Product::getProductsProperties($id_lang, $products);        
+            $products = Product::getProductsProperties($id_lang, $products);
             if(version_compare(_PS_VERSION_, '1.7', '>=')) {
                 $products = Ets_marketplace::productsForTemplate($products);
             }
@@ -836,13 +836,13 @@ class Ets_mp_seller extends ObjectModel
         LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.id_category = cl.id_category AND cl.id_lang="'.(int)$id_lang.'")
         LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl') . ')'.
         ' LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.id_product=p.id_product AND i.cover=1)
-        LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')	
+        LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
         LEFT JOIN `' . _DB_PREFIX_ . 'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
         WHERE sp.id_customer="'.(int)$this->id_customer.'" AND product_shop.active=1 AND product_shop.`id_shop` = ' . (int)Context::getContext()->shop->id.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '');
         $sql .= ' AND p.id_product!="'.(int)$product->id.'"';
-        $sql .= ' GROUP BY p.id_product ORDER BY category desc'; 
+        $sql .= ' GROUP BY p.id_product ORDER BY category desc';
         $products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, true);
-        $products = Product::getProductsProperties($id_lang, $products);        
+        $products = Product::getProductsProperties($id_lang, $products);
         if(version_compare(_PS_VERSION_, '1.7', '>=')) {
             $products = Ets_marketplace::productsForTemplate($products);
         }
@@ -861,7 +861,7 @@ class Ets_mp_seller extends ObjectModel
         WHERE  cart_rule_seller.id_customer="'.(int)$this->id_customer.'" AND (crs.id_cart_rule is null OR crs.id_shop="'.(int)$this->context->shop->id.'")  '.($filter ? $filter:'').($order_by ? ' ORDER BY '.($order_by):'');
         if(!$total)
             $sql .= ' LIMIT '.(int)$start.','.(int)$limit;
-        if($total)  
+        if($total)
             return Db::getInstance()->getValue($sql);
         else
             return Db::getInstance()->executeS($sql);
@@ -872,9 +872,9 @@ class Ets_mp_seller extends ObjectModel
             $sql = 'SELECT COUNT(DISTINCT o.id_order)';
         else
             $sql ='SELECT o.*,c.commission';
-        $sql .=' FROM `'._DB_PREFIX_.'orders` o 
-        INNER JOIN `'._DB_PREFIX_.'ets_mp_seller_order` so ON (o.id_order=so.id_order) 
-        LEFT JOIN (SELECT id_order,id_customer,SUM(commission) as commission FROM `'._DB_PREFIX_.'ets_mp_seller_commission` WHERE id_customer="'.(int)$this->id_customer.'" GROUP BY id_order,id_customer) c ON (c.id_order = o.id_order)    
+        $sql .=' FROM `'._DB_PREFIX_.'orders` o
+        INNER JOIN `'._DB_PREFIX_.'ets_mp_seller_order` so ON (o.id_order=so.id_order)
+        LEFT JOIN (SELECT id_order,id_customer,SUM(commission) as commission FROM `'._DB_PREFIX_.'ets_mp_seller_commission` WHERE id_customer="'.(int)$this->id_customer.'" GROUP BY id_order,id_customer) c ON (c.id_order = o.id_order)
         WHERE so.id_customer="'.(int)$this->id_customer.'"'.($filter ? $filter:'')
         .($order_by ? ' ORDER By '.$order_by:'');
         if(!$total)
@@ -925,8 +925,8 @@ class Ets_mp_seller extends ObjectModel
             $sql ='SELECT m.*,COUNT(p.id_product) as products,count(a.id_address) addresss,seller.id_seller,man_seller.id_customer as id_seller_customer';
         $sql .=' FROM `'._DB_PREFIX_.'manufacturer` m
             INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON (m.id_manufacturer=ms.id_manufacturer AND ms.id_shop="'.(int)$this->context->shop->id.'")
-            LEFT JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.id_manufacturer=ml.id_manufacturer AND ml.id_lang ="'.(int)$this->context->language->id.'")    
-            LEFT JOIN `'._DB_PREFIX_.'ets_mp_manufacturer_seller` man_seller ON (man_seller.id_manufacturer= m.id_manufacturer)    
+            LEFT JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.id_manufacturer=ml.id_manufacturer AND ml.id_lang ="'.(int)$this->context->language->id.'")
+            LEFT JOIN `'._DB_PREFIX_.'ets_mp_manufacturer_seller` man_seller ON (man_seller.id_manufacturer= m.id_manufacturer)
             LEFT JOIN `'._DB_PREFIX_.'ets_mp_seller` seller ON (seller.id_customer=man_seller.id_customer)
             LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_manufacturer = m. id_manufacturer)
             LEFT JOIN `'._DB_PREFIX_.'address` a ON (a.id_manufacturer=m.id_manufacturer)
@@ -969,7 +969,7 @@ class Ets_mp_seller extends ObjectModel
             $sql = 'SELECT COUNT(DISTINCT fv.id_feature_value)';
         else
             $sql ='SELECT fv.*,fvl.value';
-        $sql .=' FROM `'._DB_PREFIX_.'feature_value` fv 
+        $sql .=' FROM `'._DB_PREFIX_.'feature_value` fv
         INNER JOIN `'._DB_PREFIX_.'feature` f ON (fv.id_feature = f.id_feature)
         INNER JOIN `'._DB_PREFIX_.'feature_shop` fs ON (f.id_feature AND fs.id_shop)
         INNER JOIN `'._DB_PREFIX_.'ets_mp_feature_seller` feature_seller ON (feature_seller.id_feature = f.id_feature)
@@ -991,7 +991,7 @@ class Ets_mp_seller extends ObjectModel
             $sql = 'SELECT COUNT(DISTINCT ag.id_attribute_group)';
         else
             $sql ='SELECT ag.*,agl.name,COUNT(a.id_attribute) as total_attribute';
-        $sql .=' FROM `'._DB_PREFIX_.'attribute_group` ag 
+        $sql .=' FROM `'._DB_PREFIX_.'attribute_group` ag
         INNER JOIN `'._DB_PREFIX_.'attribute_group_shop` ags ON (ags.id_attribute_group= ag.id_attribute_group)
         INNER JOIN `'._DB_PREFIX_.'ets_mp_attribute_group_seller` agse ON (agse.id_attribute_group=ag.id_attribute_group)
         LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (agl.id_attribute_group = ag.id_attribute_group AND agl.id_lang="'.(int)$this->context->language->id.'")
@@ -1217,18 +1217,18 @@ class Ets_mp_seller extends ObjectModel
         if(trim(Tools::getValue('payment_status'))!=='')
         {
             $filter .= ' AND b.active="'.(int)Tools::getValue('payment_status').'"';
-            $show_resset=true;      
-        } 
+            $show_resset=true;
+        }
         if(trim(Tools::getValue('reference'))!=='')
         {
             $filter .= ' AND b.reference like "%'.pSQL(Tools::getValue('reference')).'%"';
-            $show_resset=true;      
+            $show_resset=true;
         }
         if(trim(Tools::getValue('date_from_min')))
         {
             $filter .=' AND s.date_from >= "'.pSQL(Tools::getValue('date_from_min')).' 00:00:00"';
             $show_resset=true;
-        } 
+        }
         if(trim(Tools::getValue('date_from_max')))
         {
             $filter .=' AND s.date_from <= "'.pSQL(Tools::getValue('date_from_max')).' 23:59:59"';
@@ -1238,7 +1238,7 @@ class Ets_mp_seller extends ObjectModel
         {
             $filter .= ' AND s.date_to >="'.pSQL(Tools::getValue('date_to_min')).' 00:00:00"';
             $show_resset=true;
-        }          
+        }
         if(trim(Tools::getValue('date_to_max')))
         {
             $filter .=' AND s.date_to <="'.pSQL(Tools::getValue('date_to_max')).' 23:59:59"';
@@ -1248,7 +1248,7 @@ class Ets_mp_seller extends ObjectModel
         {
             $filter .=' AND seller_report.total_reported >= '.(int)Tools::getValue('total_reported_min');
             $show_resset=true;
-        } 
+        }
         if(trim(Tools::getValue('total_reported_max')))
         {
             $filter .=' AND seller_report.total_reported <= '.(int)Tools::getValue('total_reported_max');
@@ -1305,12 +1305,12 @@ class Ets_mp_seller extends ObjectModel
                     break;
             }
             if($sort && ($sort_type=Tools::getValue('sort_type')) && in_array($sort_type,array('acs','desc')))
-                $sort .= ' '.$sort_type;  
+                $sort .= ' '.$sort_type;
         }
         //Paggination
         $page = (int)Tools::getValue('page') && (int)Tools::getValue('page') > 0 ? (int)Tools::getValue('page') : 1;
         $totalRecords = (int) Ets_mp_seller::_getSellers($filter,$sort,0,0,true);
-        $paggination = new Ets_mp_paggination_class();            
+        $paggination = new Ets_mp_paggination_class();
         $paggination->total = $totalRecords;
         $paggination->url = $context->link->getAdminLink('AdminMarketPlaceSellers').'&page=_page_'.$module->getFilterParams($fields_list,'ets_seller');
         $paggination->limit =  20;
@@ -1329,7 +1329,7 @@ class Ets_mp_seller extends ObjectModel
                 $seller['status_val'] = $seller['active'];
                 $seller['child_view_url'] = $context->link->getAdminLink('AdminMarketPlaceSellers').'&viewseller=1&id_seller='.(int)$seller['id_seller'];
                 if($seller['active']==-1)
-                    $seller['active'] = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending').'<'.'/'.'span'.'>'; 
+                    $seller['active'] = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending').'<'.'/'.'span'.'>';
                 elseif($seller['active']==0)
                     $seller['active'] = '<'.'span'.' class="ets_mp_status disabled">'.$this->l('Disabled').'<'.'/'.'span'.'>';
                 elseif($seller['active']==1)
@@ -1341,7 +1341,7 @@ class Ets_mp_seller extends ObjectModel
                 if($seller['id_billing'])
                 {
                     if($seller['payment_status']==-1)
-                        $seller['payment_status'] = '<'.'span'.' class="ets_mp_status canceled">'.$this->l('Canceled').'<'.'/'.'span'.'>'; 
+                        $seller['payment_status'] = '<'.'span'.' class="ets_mp_status canceled">'.$this->l('Canceled').'<'.'/'.'span'.'>';
                     elseif($seller['payment_status']==0)
                         $seller['payment_status'] = '<'.'span'.' class="ets_mp_status pending">'.$this->l('Pending').($seller['seller_confirm'] ? ' ('.$this->l('Seller confirmed').')':'').'<'.'/'.'span'.'>';
                     elseif($seller['payment_status']==1)
@@ -1364,7 +1364,7 @@ class Ets_mp_seller extends ObjectModel
                 else
                     $seller['seller_name'] = '<'.'a hr'.'ef="'.$this->context->link->getAdminLink('AdminCustomers').'&id_customer='.(int)$seller['id_customer'].'&viewcustomer">'.$seller['seller_name'].'<'.'/'.'a'.'>';
                 $seller['shop_name'] = '<'.'a hr'.'ef="'.$module->getShopLink(array('id_seller'=>$seller['id_seller'])).'" tar'.'get="_bl'.'ank" >'.$seller['shop_name'].'<'.'/'.'a'.'>';
-                
+
             }
         }
         $paggination->text =  $this->l('Showing {start} to {end} of {total} ({pages} Pages)');
@@ -1387,7 +1387,7 @@ class Ets_mp_seller extends ObjectModel
             'totalRecords' => $totalRecords,
             'sort'=> Tools::getValue('sort','id_seller'),
             'sort_type' => Tools::getValue('sort_type','desc'),
-        );            
+        );
         return  $module->renderList($listData);
     }
     public function _renderInfoSeller($id_seller)
@@ -1461,9 +1461,9 @@ class Ets_mp_seller extends ObjectModel
                                     $seller->id_billing= $billing->id;
                                     $seller->update();
                                 }
-                                
+
                             }
-                            
+
                         }
                     }
                     if(Tools::isSubmit('ajax'))
@@ -1484,7 +1484,7 @@ class Ets_mp_seller extends ObjectModel
                 }
                 else
                     $errors[] = $this->l('Update failed');
-                
+
             }
             if($errors)
             {
@@ -1498,12 +1498,12 @@ class Ets_mp_seller extends ObjectModel
                         )
                     );
                 }
-                
+
             }
         }
         $seller = new Ets_mp_seller($id_seller,$this->context->language->id);
         $customer_seller = new Customer($seller->id_customer);
-        
+
         if(Tools::isSubmit('add_commission_by_admin') || Tools::isSubmit('deduct_commission_by_admin'))
         {
             $amount = Tools::getValue('amount', false);
@@ -1618,7 +1618,7 @@ class Ets_mp_seller extends ObjectModel
             if($errors)
                 $html .= $module->displayError($errors);
             else
-                $html .= $html .= $module->displayConfirmation($this->l('Updated successfully'));                                                    
+                $html .= $html .= $module->displayConfirmation($this->l('Updated successfully'));
         }
         if($seller->active==-1)
         {
@@ -1640,10 +1640,10 @@ class Ets_mp_seller extends ObjectModel
                         'id_option'=> -3,
                         'name'=> $this->l('Declined'),
                     ),
-                 ),                             
+                 ),
                  'id' => 'id_option',
-    			 'name' => 'name'  
-            ); 
+    			 'name' => 'name'
+            );
         }
         else
             $status =array(
@@ -1656,31 +1656,31 @@ class Ets_mp_seller extends ObjectModel
                         'id_option'=>0,
                         'name'=>$this->l('Disabled'),
                     ),
-                 ),                             
+                 ),
                  'id' => 'id_option',
-    			 'name' => 'name'  
+    			 'name' => 'name'
             );
         $fields_form = array(
 			'form' => array(
 				'legend' => array(
 					'title' => $this->l('Edit shop'),
-                    'icon' =>'icon-sellers',				
+                    'icon' =>'icon-sellers',
 				),
-				'input' => array(					
+				'input' => array(
 					array(
 						'type' => 'text',
 						'label' => $this->l('Seller name'),
-						'name' => 'seller_name', 
+						'name' => 'seller_name',
                         'required' => true,
-                        'disabled' => true,   					                     
-					), 
+                        'disabled' => true,
+					),
                     array(
 						'type' => 'text',
 						'label' => $this->l('Seller email'),
-						'name' => 'seller_email',   
+						'name' => 'seller_email',
                         'disabled' => true,
-                        'required' => true,					                    
-					), 
+                        'required' => true,
+					),
                     array(
                         'type' =>'text',
                         'name' =>'shop_phone',
@@ -1697,36 +1697,36 @@ class Ets_mp_seller extends ObjectModel
                     array(
 						'type' => 'textarea',
 						'label' => $this->l('Shop description'),
-						'name' => 'shop_description',                            
+						'name' => 'shop_description',
                         'lang' => true	,
-                        'required' => true,					
-					),  
+                        'required' => true,
+					),
                     array(
 						'type' => 'text',
 						'label' => $this->l('Shop address'),
-						'name' => 'shop_address',                            
+						'name' => 'shop_address',
                         'lang' => true	,
-                        'required' => true,					
+                        'required' => true,
 					),
                     array(
 						'type' => 'text',
 						'label' => $this->l('Latitude'),
-						'name' => 'latitude',                            			
-					), 
+						'name' => 'latitude',
+					),
                     array(
 						'type' => 'text',
 						'label' => $this->l('Longitude'),
-						'name' => 'longitude',                            			
+						'name' => 'longitude',
 					),
                     array(
 						'type' => 'text',
 						'label' => $this->l('VAT number'),
-						'name' => 'vat_number',                            			
-					),     
+						'name' => 'vat_number',
+					),
                     array(
 						'type' => 'textarea',
 						'label' => $this->l('Live Chat embed code'),
-						'name' => 'code_chat',  
+						'name' => 'code_chat',
                         'desc' => $this->l('Enter here embed code of live chat service such as intercom.com, zendesk.com, etc. '),
 					),
                     array(
@@ -1755,7 +1755,7 @@ class Ets_mp_seller extends ObjectModel
                                     'id_option'=>'no',
                                     'name'=>$this->l('Manually approve by admin'),
                                 ),
-                             ),                             
+                             ),
                              'id' => 'id_option',
                 			 'name' => 'name'
                         ),
@@ -1765,7 +1765,7 @@ class Ets_mp_seller extends ObjectModel
                         'label' => $this->l('Shop group'),
                         'name' => 'id_group',
                         'options' => array(
-                            'query' => array_merge(array(array('id_group'=>0,'name'=>'--')),Ets_mp_seller_group::_getSellerGroups()),                             
+                            'query' => array_merge(array(array('id_group'=>0,'name'=>'--')),Ets_mp_seller_group::_getSellerGroups()),
                              'id' => 'id_group',
                 			 'name' => 'name'
                         ),
@@ -1778,7 +1778,7 @@ class Ets_mp_seller extends ObjectModel
                         'image' =>$seller->shop_logo ? '<i'.'mg src="'.$module->getBaseLink().'/img/mp_seller/'.$seller->shop_logo.'" style="width: 160px;"':false,
                         //'delete_url'=>$this->context->link->getAdminLink('AdminMarketPlaceSellers').'&editets_seller=1&id_seller='.$seller->id.'&deletelogo=1',
                         'desc' => sprintf($this->l('Recommended size: 250x250 px. Accepted formats: jpg, png, gif. Limit %sMb'),Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')),
-                    ), 
+                    ),
                     array(
 						'type' => 'file_lang',
 						'label' => $this->l('Shop banner'),
@@ -1791,12 +1791,12 @@ class Ets_mp_seller extends ObjectModel
                         'label' => $this->l('Banner URL'),
                         'name' => 'banner_url',
                         'lang'=>true,
-                    ),  
+                    ),
                     array(
                         'type' =>'text',
                         'label' => $this->l('Facebook link'),
                         'name' => 'link_facebook',
-                    ),  
+                    ),
                     array(
                         'type' =>'text',
                         'label' => $this->l('Google link'),
@@ -1811,14 +1811,14 @@ class Ets_mp_seller extends ObjectModel
                         'type' =>'text',
                         'label' => $this->l('Twitter link'),
                         'name' => 'link_twitter',
-                    ), 
-                                 
+                    ),
+
                     array(
 						'type' => 'select',
 						'label' => $this->l('Status'),
 						'name' => 'active',
                         //'form_group_class' => 'ets_mp_status_seller',
-						'options' => $status,					
+						'options' => $status,
 					),
                     array(
                         'type' => 'date',
@@ -1870,7 +1870,7 @@ class Ets_mp_seller extends ObjectModel
 				'id_lang' => $language->id,
 				'iso_code' => $language->iso_code
 			),
-            
+
             'PS_ALLOW_ACCENTED_CHARS_URL', (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'),
 			'fields_value' => $this->getSellerFieldsValues(),
 			'languages' => $this->context->controller->getLanguages(),
@@ -1879,10 +1879,10 @@ class Ets_mp_seller extends ObjectModel
             'link' => $this->context->link,
             'cancel_url' => $this->context->link->getAdminLink('AdminMarketPlaceSellers', true),
             'banner_del_link' => $this->context->link->getAdminLink('AdminMarketPlaceSellers').'&editets_seller=1&id_seller='.Tools::getValue('id_seller').'&deletebanner=1',
-		);            
+		);
         $fields_form['form']['input'][] = array('type' => 'hidden', 'name' => 'id_seller');
-		//$helper->override_folder = '/../'; 
-        return $html.$helper->generateForm(array($fields_form));	
+		//$helper->override_folder = '/../';
+        return $html.$helper->generateForm(array($fields_form));
     }
     public function getSellerFieldsValues()
     {
@@ -1960,7 +1960,7 @@ class Ets_mp_seller extends ObjectModel
                     'specific'=>'seller'
                 );
                 Ets_marketplace::sendMail('to_seller_account_expired',$data,$this->seller_email,$subjects,$this->seller_name);
-            }    
+            }
             elseif($this->active==-3 && Configuration::get('ETS_MP_EMAIL_SELLER_SHOP_ACTIVED_OR_DECLINED'))
             {
                 $subjects = array(
@@ -1969,7 +1969,7 @@ class Ets_mp_seller extends ObjectModel
                     'specific'=>'seller'
                 );
                 Ets_marketplace::sendMail('to_seller_shop_declined',$data,$this->seller_email,$subjects,$this->seller_name);
-            }    
+            }
         }
         if($this->vacation_mode!=$seller_old['vacation_mode'] || $this->vacation_type!= $seller_old['vacation_type'])
         {
@@ -2020,7 +2020,7 @@ class Ets_mp_seller extends ObjectModel
                 Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'product_shop` SET active=0 WHERE active=1 AND id_product IN (' . implode(',', array_map('intval', $productsIds)) . ')');
             }
             if(Module::isEnabled('ps_facetedsearch'))
-                $search = Module::getInstanceByName('ps_facetedsearch'); 
+                $search = Module::getInstanceByName('ps_facetedsearch');
             elseif(Module::isEnabled('blocklayered'))
                 $search = Module::getInstanceByName('blocklayered');
             if(isset($search))
@@ -2080,9 +2080,9 @@ class Ets_mp_seller extends ObjectModel
             $sql = 'SELECT COUNT(DISTINCT c.id_carrier)';
         else
             $sql ='SELECT *';
-        $sql .=' FROM `'._DB_PREFIX_.'carrier` c 
+        $sql .=' FROM `'._DB_PREFIX_.'carrier` c
         INNER JOIN `'._DB_PREFIX_.'ets_mp_carrier_seller` cs ON (c.id_reference= cs.id_carrier_reference AND cs.id_customer="'.(int)$this->id_customer.'")
-        LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.id_carrier=cl.id_carrier AND cl.id_lang="'.(int)$this->context->language->id.'")     
+        LEFT JOIN `'._DB_PREFIX_.'carrier_lang` cl ON (c.id_carrier=cl.id_carrier AND cl.id_lang="'.(int)$this->context->language->id.'")
         WHERE c.deleted=0 '.($filter ? $filter:'').' GROUP BY c.id_carrier'
         .($order_by ? ' ORDER By '.$order_by:'');
         if(!$total)
@@ -2099,8 +2099,8 @@ class Ets_mp_seller extends ObjectModel
         if($total)
             $sql = 'SELECT COUNT(DISTINCT m.id_ets_mp_seller_manager)';
         else
-            $sql = 'SELECT m.*,CONCAT(c.firstname," ",c.lastname) as name'; 
-        $sql .=' FROM `'._DB_PREFIX_.'ets_mp_seller_manager` m 
+            $sql = 'SELECT m.*,CONCAT(c.firstname," ",c.lastname) as name';
+        $sql .=' FROM `'._DB_PREFIX_.'ets_mp_seller_manager` m
         INNER JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=m.id_user)
         WHERE m.id_customer="'.(int)$this->id_customer.'" '.($filter ? $filter:'').($order_by ? ' ORDER By '.$order_by:'');
         if($total)
@@ -2195,20 +2195,20 @@ class Ets_mp_seller extends ObjectModel
     public function checkHasManufacturer($id_manufacturer,$user= true)
     {
         if($user)
-            return Db::getInstance()->getRow('SELECT m.id_manufacturer as id, m.name,manu_seller.id_customer 
+            return Db::getInstance()->getRow('SELECT m.id_manufacturer as id, m.name,manu_seller.id_customer
             FROM `'._DB_PREFIX_.'manufacturer` m
             INNER JOIN `'._DB_PREFIX_.'manufacturer_shop` ms ON (m.id_manufacturer=ms.id_manufacturer AND ms.id_shop="'.(int)$this->context->shop->id.'")
             LEFT JOIN `'._DB_PREFIX_.'ets_mp_manufacturer_seller` manu_seller ON (manu_seller.id_manufacturer=m.id_manufacturer)
             WHERE '.($this->user_brand == 2  ? 'manu_seller.id_customer="'.(int)$this->id_customer.'"' : ($this->user_brand==1 ? ' manu_seller.id_customer is null' : '(manu_seller.id_customer is null OR manu_seller.id_customer="'.(int)$this->id_customer.'")') ).' AND m.active=1 AND m.id_manufacturer='.(int)$id_manufacturer);
         else
             return Db::getInstance()->getRow('SELECT * FROM `'._DB_PREFIX_.'ets_mp_manufacturer_seller` WHERE id_customer="'.(int)$this->id_customer.'" AND id_manufacturer='.(int)$id_manufacturer);
-        
+
     }
     public function checkHasFeature($id_feature,$user = true)
     {
         if($user)
         {
-            return Db::getInstance()->getRow('SELECT f.*,fl.name FROM `'._DB_PREFIX_.'feature` f 
+            return Db::getInstance()->getRow('SELECT f.*,fl.name FROM `'._DB_PREFIX_.'feature` f
                     INNER JOIN `'._DB_PREFIX_.'feature_shop` fs ON (fs.id_feature=f.id_feature AND fs.id_shop="'.(int)$this->context->shop->id.'")
                     LEFT JOIN `'._DB_PREFIX_.'ets_mp_feature_seller` sf ON (sf.id_feature= f.id_feature)
                     LEFT JOIN `'._DB_PREFIX_.'feature_lang` fl ON (f.id_feature = fl.id_feature AND fl.id_lang="'.(int)$this->context->language->id.'")
@@ -2233,7 +2233,7 @@ class Ets_mp_seller extends ObjectModel
             WHERE ag.id_attribute_group="'.(int)$id_attribute_group.'" AND agse.id_customer="'.(int)$this->id_customer.'"';
             return Db::getInstance()->getRow($sql);
         }
-        
+
     }
     public function checkHasCartRule($id_cart_rule)
     {
@@ -2260,7 +2260,7 @@ class Ets_mp_seller extends ObjectModel
                     'specific'=>'seller',
                 );
                 Ets_marketplace::sendMail('to_admin_seller_confirmed_payment',$data,'',$subjects);
-                
+
             }
             die(
                 Tools::jsonEncode(
@@ -2462,7 +2462,7 @@ class Ets_mp_seller extends ObjectModel
                             $seller->{$field} = Tools::getValue($field);
                     }
                     else
-                    { 
+                    {
                         if($field=='shop_logo')
                         {
                             if(isset($_FILES['shop_logo']['name'])&& $_FILES['shop_logo']['name'])
@@ -2499,7 +2499,7 @@ class Ets_mp_seller extends ObjectModel
                                     $seller->shop_banner[$language['id_lang']] = $seller->shop_banner[$id_lang_default];
                             }
                         }
-                        
+
                     }
                 }
             }
@@ -2515,9 +2515,9 @@ class Ets_mp_seller extends ObjectModel
                 {
                     $seller->active = Tools::getValue('active');
                     $seller->reason = Tools::getValue('reason');
-                } 
+                }
                 elseif(Tools::getValue('active')==-1)
-                     $seller->active = Tools::getValue('active');  
+                     $seller->active = Tools::getValue('active');
                 else{
                     if((!$seller->date_from || strtotime($seller->date_from) <= strtotime(date('Y-m-d'))) && (!$seller->date_to || strtotime($seller->date_to) >= strtotime(date('Y-m-d'))))
                     {
@@ -2662,8 +2662,8 @@ class Ets_mp_seller extends ObjectModel
                                 $message = Configuration::get('ETS_MP_ MESSAGE_SHOP_ACTIVED',$this->context->language->id)?:$this->l('Congratulations! Your shop has been activated. You can upload products and start selling them','create');
                             else
                                 $message = Configuration::get('ETS_MP_MESSAGE_CREATED_SHOP_NO_FEE',$this->context->language->id)?:$this->l('Thanks for creating your shop. Our team are reviewing it. We will get back to you soon','create');
-                        
-                        } 
+
+                        }
                         $this->context->cookie->success_message =str_replace("\n",'<br/>',$message);
                         if(Configuration::get('ETS_MP_EMAIL_ADMIN_SHOP_CREATED'))
                         {
@@ -2680,7 +2680,7 @@ class Ets_mp_seller extends ObjectModel
                                 'specific'=>'create'
                             );
                             Ets_marketplace::sendMail('to_admin_shop_created',$data,'',$subjects);
-                            
+
                         }
                     }
                     else
@@ -2697,7 +2697,7 @@ class Ets_mp_seller extends ObjectModel
                             }
                         }
                     }
-                }    
+                }
             }
             else
             {

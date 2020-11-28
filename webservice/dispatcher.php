@@ -59,6 +59,14 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
     die('401 Unauthorized');
 }
 
+// redirect to ets_marketplace API
+if (Module::isInstalled('ets_marketplace') && Module::isEnabled('ets_marketplace')) {
+    if (explode("/",$_SERVER['REQUEST_URI'])[2]=="marketplace") {
+        include_once("../modules/ets_marketplace/override/webservice/ets_webservice.php");
+        die();
+    }
+}
+
 $input_xml = null;
 
 // if a XML is in PUT or in POST

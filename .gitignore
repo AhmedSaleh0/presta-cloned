@@ -218,3 +218,8 @@ nb-configuration.xml
 .externalToolBuilders/
 app/config/parameters.php
 app/config/parameters.php
+app/config/parameters_remote.php
+app/config/parameters_remote.php
+app/config/parameters_remote.php
+modules/ets_marketplace/cron.txt
+modules/ets_marketplace/cron.txt

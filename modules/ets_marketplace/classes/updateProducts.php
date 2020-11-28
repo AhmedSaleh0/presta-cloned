@@ -63,7 +63,7 @@ class UpdateProducts
             $this->exist_product = $exist_products[0];
 
             if ($this->exist_product && $this->product_seller==(int)$this->seller->id_customer) {
-                $result = $this->updateProduct($product_data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price);
+                $result = $this->updateProduct($this->exist_product['id_product'],$product_data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price);
             }
             else {
                 $result = $this->addProduct($product_data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price);
@@ -76,15 +76,14 @@ class UpdateProducts
         return 1;
     }
 
-
-    public function updateProduct($data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price)
+    public function updateProduct($id_product,$data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price)
     {
 
         #if(!isset($data[$col_name]) or !$data[$col_name] or !Validate::isCatalogName($data[$col_name])) $error=1;
         #if(!isset($data[$col_link_rewrite]) or !$data[$col_link_rewrite] or !Validate::isLinkRewrite($data[$col_link_rewrite])) $error=1;
 
         $context = Context::getContext();
-        $product = new Product($this->exist_product['id_product'], null, $context->language->id, $this->seller->id_shop, $context);
+        $product = new Product($id_product, null, $context->language->id, $this->seller->id_shop, $context);
 
         $languages = Language::getLanguages(false);
         foreach($languages as $language)
@@ -118,7 +117,38 @@ class UpdateProducts
             }
         }
 
-        $images = explode(',',$data[$col_image]);
+        if(isset($data[$col_image]) && $data[$col_image])
+        {
+            // Delete existing images
+            $product_images = Image::getImages($context->language->id, $product->id);
+            foreach($product_images as $product_image)
+            {
+                $img = new Image($product_image['id_image']);
+                $img->delete();
+            }
+
+            // Add new images
+            $images = explode(',',$data[$col_image]);
+            if($images)
+            {
+                $cover= false;
+                foreach($images as $image)
+                {
+                    $image_class = new Image();
+                    if(!$cover)
+                    {
+                        $image_class->cover=1;
+                        $cover=1;
+                    }
+                    $image_class->id_product = $product->id;
+                    if($image_class->add())
+                    {
+                        if(!$this->copyImg($product->id,$image_class->id,$image))
+                            $image_class->delete();
+                    }
+                }
+            }
+        }
 
         $specific_prices = (isset($data[$col_specific_price])) ? Tools::jsonDecode($data[$col_specific_price],true) : "";
 
@@ -152,8 +182,6 @@ class UpdateProducts
 
     public function addProduct($data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price)
     {
-        #file_put_contents('cronjob_log.txt',"\r\n"."-add new product: ".$data[$col_name]."\r\n", FILE_APPEND);
-
         #if(!isset($data[$col_name]) or !$data[$col_name] or !Validate::isCatalogName($data[$col_name])) $error=1;
         #if(!isset($data[$col_link_rewrite]) or !$data[$col_link_rewrite] or !Validate::isLinkRewrite($data[$col_link_rewrite])) $error=1;
 
@@ -215,7 +243,7 @@ class UpdateProducts
         //     return ["error"=>"Error in product data"];
         // }
 
-        // Attach new product to selletr
+        // Attach new product to seller
         if ($this->exist_product and (int)$this->product_seller!=(int)$this->seller->id_customer)
         {
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'ets_mp_seller_product`(id_customer,id_product,approved,active) VALUES("'.(int)$this->seller->id_customer.'","'.(int)$this->exist_product['id_product'].'","'.(int)$product->active.'","'.(int)$product->active.'")');
@@ -496,7 +524,6 @@ class UpdateProducts
         }
 
         return 1;
-
     }
 
     public function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true, $thumb = false)
