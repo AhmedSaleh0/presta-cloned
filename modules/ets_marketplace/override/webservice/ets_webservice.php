@@ -14,9 +14,21 @@
  * DELETE api/marketplace/categories/{id_category}
  */
 
+require_once('../../../../config/config.inc.php');
+
 if(!defined('_PS_VERSION_')) exit;
 
-require_once('../modules/ets_marketplace/ets_marketplace.php');
+if (isset($_SERVER['PHP_AUTH_USER'])) {
+    $key = $_SERVER['PHP_AUTH_USER'];
+} elseif (isset($_GET['ws_key'])) {
+    $key = $_GET['ws_key'];
+} else {
+    header($_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized');
+    header('WWW-Authenticate: Basic realm="Welcome to PrestaShop Webservice, please enter the authentication key as the login. No password required."');
+    die('401 Unauthorized');
+}
+
+require_once('../../../../modules/ets_marketplace/ets_marketplace.php');
 
 $available_methods = array('shops','products','categories');
 $urlSegment = explode("/",$_SERVER['REQUEST_URI']);
