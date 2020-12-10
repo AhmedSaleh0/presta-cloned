@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'dev-ac5e70644d424032836abc812e47fa41b40a428b',
-    'version' => 'dev-ac5e70644d424032836abc812e47fa41b40a428b',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => 'ac5e70644d424032836abc812e47fa41b40a428b',
+    'reference' => 'e6b958c4d6f9ed28a6061e63a4089592e7c224b8',
     'name' => 'prestashop/ps_checkout',
   ),
   'versions' => 
@@ -103,12 +103,12 @@
     ),
     'prestashop/ps_checkout' => 
     array (
-      'pretty_version' => 'dev-ac5e70644d424032836abc812e47fa41b40a428b',
-      'version' => 'dev-ac5e70644d424032836abc812e47fa41b40a428b',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => 'ac5e70644d424032836abc812e47fa41b40a428b',
+      'reference' => 'e6b958c4d6f9ed28a6061e63a4089592e7c224b8',
     ),
     'psr/cache' => 
     array (
