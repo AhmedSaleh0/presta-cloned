@@ -23,7 +23,7 @@ class Hook extends HookCore
 {
     /*
     * module: gdprpro
-    * date: 2020-12-10 15:55:56
+    * date: 2020-12-10 14:41:18
     * version: 2.1.13
     */
     public static function getHookModuleExecList($hook_name = null)
