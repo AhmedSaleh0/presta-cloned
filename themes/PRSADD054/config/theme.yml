@@ -1,0 +1,197 @@
+name: PRSADD054
+display_name: PRSADD054
+version: 1.0.0
+author:
+  name: "TemplateMela"
+  email: "support@templatemela.com"
+  url: "http://www.templatemela.com"
+
+meta:
+  compatibility:
+      from: 1.7.0.0
+      to: 1.7.6.8
+
+  available_layouts:
+    layout-full-width:
+      name: Full Width
+      description: No side columns, ideal for distraction-free pages such as product pages.
+    layout-both-columns:
+      name: Three Columns
+      description: One large central column and 2 side columns.
+    layout-left-column:
+      name: Two Columns, small left column
+      description: Two columns with a small left column
+    layout-right-column:
+      name: Two Columns, small right column
+      description: Two columns with a small right column
+
+assets:
+  # If you're using this theme as child and you want to load
+  # the parent theme assets, uncomment this line.
+#  use_parent_assets: true
+
+  # The following lines are showing how to load assets in your page
+  # Uncomment and change value to start loading css or js files
+   css:
+     all:
+       - id: fontawesome-lib-style
+         path: assets/css/font-awesome.css
+#    product:
+#      - id: product-style
+#        path: assets/css/product.css
+#        media: all
+#        priority: 200
+   js:
+     all:
+       - id: owl-carousel-lib
+         path: assets/js/owl.carousel.js
+         priority: 310
+         position: bottom
+       - id: totalstorage-lib
+         path: assets/js/totalstorage.js
+         priority: 330
+         position: bottom
+       - id: lightbox
+         path: assets/js/lightbox.js
+         priority : 370
+         position: bottom
+       - id: lazysizes
+         path: assets/js/lazysizes.min.js
+         priority : 390
+         position: bottom
+#    cart:
+#      - id: cat-extra-lib
+#        path: assets/js/cart-lib.js
+
+
+global_settings:
+  configuration:
+    PS_IMAGE_QUALITY: png
+  modules:
+   to_enable:
+     - ps_linklist
+   to_disable:
+     - ps_imageslider
+  hooks:
+    modules_to_hook:
+      displayNav1:
+        - ps_languageselector
+        - ps_currencyselector
+      displayNav2:
+        - ps_customersignin
+      displayTop:
+        - ps_shoppingcart
+        - tm_navcmsblock
+        - tm_toplink
+        - ps_searchbar
+      displayTopColumn:
+        - tm_imageslider
+      displayTmFeature:
+        - tm_featuredproducts
+      displayTmNew:
+        - tm_newproducts
+      displayTmBestseller:
+        - tm_bestsellers
+      displayAfterHeader:
+        - tm_cmsblock
+      displayHomeBanner:
+        - tm_cms1block
+      displayHome:
+        - tm_cmsbannerblock
+        - tm_specials
+        - tm_cms2block
+        - tm_brandlogo
+      displayHomeBanner:
+        - tm_cms1block
+      displayFooterBefore:
+        - ps_emailsubscription
+        - ps_socialfollow
+      displayFooter:
+        - tm_footercmsblock
+        - tm_sidenewproducts
+        - ps_linklist
+        - ps_contactinfo
+        - tmcouponpop
+      displayFooterAfter:
+        - tm_footerlink
+        - tm_paymentcmsblock
+      displayFooterAfter1:
+      displayFooterProduct:
+        - ps_crossselling
+      displayLeftColumn:
+        - tm_verticalmenu
+        - ps_facetedsearch
+        - tm_leftbanner
+        - tm_sidebestsellers
+        - tm_testimonialcmsblock
+      displayLeftColumnProduct:
+        - tm_verticalmenu
+        - ps_facetedsearch
+        - tm_leftbanner
+        - tm_sidebestsellers
+      displaySearch:
+        - ps_searchbar
+      displayProductButtons:
+        - ps_sharebuttons
+      displayReassurance:
+        - blockreassurance
+      displayTmHoverImage:
+        - tm_imagehover
+
+  image_types:
+    cart_default:
+      width: 58
+      height: 60
+      scope: [products]
+    small_default:
+      width: 98
+      height: 98
+      scope: [products, categories, manufacturers, suppliers]
+    medium_default:
+      width: 452
+      height: 452
+      scope: [products, manufacturers, suppliers]
+    home_default:
+      width: 210 
+      height: 220
+      scope: [products]
+    large_default:
+      width: 954
+      height: 1000
+      scope: [products, manufacturers, suppliers]
+    category_default:
+      width: 915
+      height: 140
+      scope: [categories]
+    stores_default:
+      width: 170
+      height: 115
+      scope: [stores]
+
+theme_settings:
+  default_layout: layout-left-column
+  layouts:
+dependencies:
+  modules:
+    - tm_imageslider
+    - tm_featuredproducts
+    - tm_newproducts
+    - tm_bestsellers
+    - tm_cmsbannerblock
+    - tm_specials
+    - tm_cmsblock
+    - tm_brandlogo
+    - tm_leftbanner
+    - tm_footercmsblock
+    - tm_footerlink
+    - tm_navcmsblock
+    - tm_paymentcmsblock
+    - tm_sidebestsellers
+    - tm_sidenewproducts
+    - tm_cms1block
+    - tm_cms2block
+    - tm_testimonialcmsblock
+    - tm_toplink
+    - tm_verticalmenu
+    - tm_imagehover
+    - tmcouponpop

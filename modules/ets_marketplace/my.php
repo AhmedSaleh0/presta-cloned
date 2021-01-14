@@ -1,6 +1,7 @@
 <?php
 
-#echo "go";
+phpinfo();
+die();
 
 define("PROJECT_ID","29544632ee3d4b09ac9ed183c80a8112");
 $url = "https://mainnet.infura.io/v3/".PROJECT_ID;
