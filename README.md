@@ -7,4 +7,6 @@
  API Key: 405a82svxm40sfh50vaa2up0ckvaenb6 </br>
 
  Date: 14.01.2021 </br>
- Name: New Theme
+ Name: New Prestashop Theme PRSADD054 </br>
+ Url: https://addons.prestashop.com/demo/FO19604.html </br>
+ (from file)  </br>
