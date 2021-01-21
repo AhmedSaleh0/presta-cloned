@@ -17,7 +17,7 @@ Class Erc20_PaymentErc20paymentModuleFrontController extends ModuleFrontControll
         $amountNeededForPayment = $this->getOrderAmountNeededForPayment($order_id);
         $amountInPaymentWallet = $this->getPCHAmountFromPaymentWallet($wallet);
 
-        if($amountInPaymentWallet > $amountNeededForPayment) {
+        if($amountInPaymentWallet >= $amountNeededForPayment) {
             $this->setOrderStatusForPaymentReceived($order_id);
         }
 
