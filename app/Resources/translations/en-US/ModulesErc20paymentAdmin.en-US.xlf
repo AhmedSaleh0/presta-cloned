@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/erc20_payment/erc20_payment.php" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="48c6aa380e9fc3a3a605273d7af50016" approved="yes">
+        <source>crypto token payment</source>
+        <target state="final">crypto token payment</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="cedc96489132776ce19ebc2751f17454" approved="yes">
+        <source>Accept payments via ERC-20 tokens.</source>
+        <target state="final">Accept payments via ERC-20 tokens.</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="cbe0a99684b145e77f3e14174ac212e3" approved="yes">
+        <source>Are you sure about removing these details?</source>
+        <target state="final">Are you sure about removing these details?</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="a02758d758e8bec77a33d7f392eb3f8a" approved="yes">
+        <source>No currency has been set for this module.</source>
+        <target state="final">No currency has been set for this module.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/erc20_payment/views/templates/hook/infos.tpl" source-language="en" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1be305030739396775edaca9813f77d" approved="yes">
+        <source>This module allows you to accept secure payments via ERC-20 crypto tokens.</source>
+        <target state="final">This module allows you to accept secure payments via ERC-20 crypto tokens.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="cfc0561623b37471f267aa911092b3ac" approved="yes">
+        <source>If the client chooses to pay via ERC-20 crypto token, the order status will change to 'Waiting for Payment' until the payment has been successfully sent.</source>
+        <target state="final">If the client chooses to pay via ERC-20 crypto token, the order status will change to 'Waiting for Payment' until the payment has been successfully sent.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="5fb4bbf993c23848433caf58e6b2816d" approved="yes">
+        <source>If the customer has successfully sent the ERC-20 crypto tokens the order status will automatically be updated.</source>
+        <target state="final">If the customer has successfully sent the ERC-20 crypto tokens the order status will automatically be updated.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

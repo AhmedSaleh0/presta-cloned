@@ -80,7 +80,7 @@ themes/default-bootstrap/modules/*/mails/*
 /app/bootstrap.php.cache
 /app/cache/*
 !app/cache/.gitkeep
-/app/Resources/translations/*
+!/app/Resources/translations/*
 !/app/Resources/translations/default
 /app/test/cache/*
 !app/test/cache/.gitkeep
