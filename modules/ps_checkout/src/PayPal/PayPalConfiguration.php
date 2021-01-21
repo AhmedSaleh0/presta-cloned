@@ -22,6 +22,7 @@ namespace PrestaShop\Module\PrestashopCheckout\PayPal;
 
 use PrestaShop\Module\PrestashopCheckout\Configuration\PrestaShopConfiguration;
 use PrestaShop\Module\PrestashopCheckout\Exception\PsCheckoutException;
+use PrestaShop\Module\PrestashopCheckout\Repository\PayPalCodeRepository;
 use PrestaShop\Module\PrestashopCheckout\Settings\RoundingSettings;
 
 class PayPalConfiguration
@@ -42,9 +43,15 @@ class PayPalConfiguration
      */
     private $configuration;
 
-    public function __construct(PrestaShopConfiguration $configuration)
+    /**
+     * @var PayPalCodeRepository
+     */
+    private $codeRepository;
+
+    public function __construct(PrestaShopConfiguration $configuration, PayPalCodeRepository $codeRepository)
     {
         $this->configuration = $configuration;
+        $this->codeRepository = $codeRepository;
     }
 
     /**
@@ -71,26 +78,6 @@ class PayPalConfiguration
         }
 
         $this->configuration->set(self::INTENT, $captureMode);
-    }
-
-    /**
-     * Used to return the PS_CHECKOUT_PAYMENT_METHODS_ORDER from the Configuration
-     *
-     * @return string
-     */
-    public function getPaymentMethodsOrder()
-    {
-        return $this->configuration->get(self::PAYMENT_METHODS_ORDER);
-    }
-
-    /**
-     * Used to set the PS_CHECKOUT_PAYMENT_METHODS_ORDER in the Configuration
-     *
-     * @param $paymentMethodsOrder
-     */
-    public function setPaymentMethodsOrder($paymentMethodsOrder)
-    {
-        $this->configuration->set(self::PAYMENT_METHODS_ORDER, $paymentMethodsOrder);
     }
 
     /**
@@ -126,7 +113,7 @@ class PayPalConfiguration
      */
     public function setCardPaymentEnabled($status)
     {
-        $this->configuration->set(self::CARD_PAYMENT_ENABLED, (bool) $status);
+        $this->configuration->set(self::CARD_PAYMENT_ENABLED, (int) $status);
     }
 
     /**
@@ -144,7 +131,7 @@ class PayPalConfiguration
      */
     public function setCardInlinePaypalEnabled($status)
     {
-        $this->configuration->set(self::PS_CHECKOUT_PAYPAL_CB_INLINE, (bool) $status);
+        $this->configuration->set(self::PS_CHECKOUT_PAYPAL_CB_INLINE, (int) $status);
     }
 
     /**
@@ -242,46 +229,71 @@ class PayPalConfiguration
     }
 
     /**
-     * Get funding sources sorted according to configuration
+     * Get the incompatible ISO country codes with Paypal.
      *
-     * @return string[]
+     * @return array
      */
-    public function getFundingSources()
+    public function getIncompatibleCountryCodes()
     {
-        $paymentMethods = $this->configuration->get(self::PAYMENT_METHODS_ORDER);
+        $db = \Db::getInstance();
+        $shopCodes = $db->executeS(
+            "SELECT c.iso_code
+            FROM ps_country c
+            JOIN ps_module_country mc ON mc.id_country = c.id_country
+            JOIN ps_module m ON m.id_module = mc.id_module
+            WHERE c.active = 1
+            AND m.name = 'ps_checkout'
+            AND mc.id_shop = " . \Context::getContext()->shop->id
+        );
+        $paypalCodes = $this->codeRepository->getCountryCodes();
 
-        if (empty($paymentMethods)) {
-            $paymentMethods = [
-                ['name' => 'card'],
-                ['name' => 'paypal'],
-            ];
-        } else {
-            $paymentMethods = json_decode($paymentMethods, true);
-        }
+        return $this->checkCodesCompatibility($shopCodes, $paypalCodes);
+    }
 
-        $fundingSources = [
-            'card',
-            'paypal',
-            'bancontact',
-            'ideal',
-            'gyropay',
-            'eps',
-            'mybank',
-            'sofort',
-            'p24',
-        ];
+    /**
+     * Get the incompatible ISO currency codes with Paypal.
+     *
+     * @return array
+     */
+    public function getIncompatibleCurrencyCodes()
+    {
+        $db = \Db::getInstance();
+        $shopCodes = $db->executeS(
+            "SELECT c.iso_code
+            FROM ps_currency c
+            JOIN ps_module_currency mc ON mc.id_currency = c.id_currency
+            JOIN ps_module m ON m.id_module = mc.id_module
+            WHERE c.active = 1
+            AND m.name = 'ps_checkout'
+            AND mc.id_shop = " . \Context::getContext()->shop->id
+        );
+        $paypalCodes = $this->codeRepository->getCurrencyCodes();
 
-        // If card is not enable and cb inline too -> no card
-        if (!$this->isCardPaymentEnabled() && !$this->isCardInlinePaypalIsEnabled()) {
-            unset($fundingSources[0]);
-        } else {
-            // If card is not in first position in configuration, move it at the end.
-            if ('card' !== $paymentMethods[0]['name']) {
-                unset($fundingSources[0]);
-                $fundingSources[] = 'card';
+        return $this->checkCodesCompatibility($shopCodes, $paypalCodes);
+    }
+
+    /**
+     * Check shop codes compatibility with Paypal
+     *
+     * @param array $shopCodes
+     * @param array $paypalCodes
+     *
+     * @return array|null
+     */
+    private function checkCodesCompatibility($shopCodes, $paypalCodes)
+    {
+        $incompatibleCodes = [];
+
+        foreach ($shopCodes as $shopCode) {
+            if (!in_array(strtoupper($shopCode['iso_code']), array_keys($paypalCodes))) {
+                $incompatibleCodes[] = $shopCode['iso_code'];
             }
         }
 
-        return array_values($fundingSources);
+        if (empty($incompatibleCodes)) {
+            $incompatibleCodes = null;
+        }
+
+        return $incompatibleCodes;
     }
 }
