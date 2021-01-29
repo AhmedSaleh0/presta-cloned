@@ -290,6 +290,13 @@ class ProductCore extends ObjectModel
      */
     public $delivery_out_stock;
 
+    /**
+     * custom PCH Discount attribute
+     *
+     * @var string
+     */
+    public $pch_discount;
+
     public static $_taxCalculationMethod = null;
     protected static $_prices = array();
     protected static $_pricesLevel2 = array();
@@ -384,6 +391,9 @@ class ProductCore extends ObjectModel
             'date_add' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'pack_stock_type' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+
+            //custom PCH discount attribute
+            'pch_discount' => array('type' => self::TYPE_FLOAT, 'shop' => true),
 
             /* Lang fields */
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),

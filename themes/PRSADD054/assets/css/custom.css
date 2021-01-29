@@ -1,6 +1,14 @@
 /********************************************************
 			Templatemela Custom Styles
 ********************************************************/
+.img-responsive{
+  max-height: 50px;
+}
+
+.top-logo{
+  max-height: 50px;
+}
+
 .tm-carousel {
   display: none;
   position: relative;

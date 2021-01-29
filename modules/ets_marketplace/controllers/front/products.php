@@ -1314,7 +1314,11 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 $valueFieldPost['delivery_out_stock'][$language['id_lang']]=Tools::getValue('delivery_out_stock_'.(int)$language['id_lang']);
         }
         $valueFieldPost['id_tax_rules_group'] = $this->product->id_tax_rules_group;
-        if($this->product->id)
+
+		//custom PCH discount attribute
+		$valueFieldPost['pch_discount'] =$this->product->pch_discount;
+
+		if($this->product->id)
         {
             $valueFieldPost['price_excl'] =$this->product->price;
             $valueFieldPost['price_incl'] =Tools::ps_round($this->product->price +$this->product->price*$this->module->getTaxValue($this->product->id_tax_rules_group),6);
@@ -1441,8 +1445,14 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'name' => $this->module->l('Product with combinations','products'),
                     ),
                 )
+            ),
+			array(
+                'type' => 'text',
+                'name' => 'pch_discount',
+                'label' => $this->module->l('PCH Discount','products'),
+				'col' => 'col-lg-6',
+				'suffix' => '%',
             )
-
         );
         if(in_array('short_description',$this->seller_product_information))
             $fields[]= array(
@@ -2051,6 +2061,16 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             if(Tools::getValue('delivery_out_stock_'.$language['id_lang']) && !Validate::isCleanHtml(Tools::getValue('delivery_out_stock_'.$language['id_lang'])))
                 $this->errors[] = $this->module->l('Time delivery out stock is not valid in','products').' '.$language['iso_code'];
         }
+
+		//custom PCH discount attribute
+		if(trim(Tools::getValue('pch_discount'))==='')
+        {
+            $this->errors[]= $this->module->l('PCH Discount is required','products');
+        }
+        elseif(!Validate::isUnsignedFloat(Tools::getValue('pch_discount')))
+            $this->errors[]= $this->module->l('PCH Discount is not valid','products');
+
+
         if(trim(Tools::getValue('price_excl'))==='')
         {
             $this->errors[]= $this->module->l('Product price is required','products');
@@ -2258,6 +2278,11 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         {
             $this->product->reference = Tools::getValue('reference');
         }
+
+		//custom PCH Discount attribute
+		$this->product->pch_discount = (float)Tools::getValue('pch_discount');
+		error_log(Tools::getValue('pch_discount'));
+
         $this->product->price = (float)Tools::getValue('price_excl');
         $this->product->id_tax_rules_group = Tools::getValue('id_tax_rules_group');
         $this->product->width =(float)Tools::getValue('width');

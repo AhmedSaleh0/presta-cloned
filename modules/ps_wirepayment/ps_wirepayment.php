@@ -229,6 +229,22 @@ class Ps_Wirepayment extends PaymentModule
                 $bankwireAddress = '___________';
             }
 
+            $wallet = $this->generatePaymentWallet($orderId);
+			$this->createPaymentWalletWebHook($wallet);
+
+            $products = $params['order']->getProducts();
+
+            $total_in_pch_to_pay_for_discount = 0.0;
+
+            foreach ($products as $product) {
+                $currentProduct = new Product($product['product_id']);
+                $currentDiscount = (float)$currentProduct->pch_discount;
+                $currentTotalPrice = $product['total_price_tax_incl'];
+                $currentPCHDiscount = $currentTotalPrice * ($currentDiscount / 100.0);
+                $total_in_pch_to_pay_for_discount += $currentPCHDiscount;
+            }
+
+
             $totalToPaid = $params['order']->getOrdersTotalPaid() - $params['order']->getTotalPaid();
             $this->smarty->assign(array(
                 'shop_name' => $this->context->shop->name,
@@ -240,6 +256,19 @@ class Ps_Wirepayment extends PaymentModule
                 'bankwireDetails' => $bankwireDetails,
                 'bankwireAddress' => $bankwireAddress,
                 'bankwireOwner' => $bankwireOwner,
+                'amount_erc20' => ($total_in_pch_to_pay_for_discount / 0.16).' PCH',
+                'amount_erc20_currency' => Tools::displayPrice(
+                    $total_in_pch_to_pay_for_discount,
+                    new Currency($params['order']->id_currency),
+                    false
+                ),
+                'amount_erc20_currency_raw' => $total_in_pch_to_pay_for_discount,
+                'total_with_discount' => Tools::displayPrice(
+                    $totalToPaid - $total_in_pch_to_pay_for_discount,
+                    new Currency($params['order']->id_currency),
+                    false
+                ),
+                'wallet' => $wallet,
                 'status' => 'ok',
                 'reference' => $params['order']->reference,
                 'contact_url' => $this->context->link->getPageLink('contact', true)
@@ -436,5 +465,52 @@ class Ps_Wirepayment extends PaymentModule
             'bankwireReservationDays' => (int)$bankwireReservationDays,
             'bankwireCustomText' => $bankwireCustomText,
         );
+    }
+
+    public function generatePaymentWallet($orderId) {
+		$postfields = array (
+				 'token' => '9216e5ed002b4e83a3e8bb54cfd17daf'
+				 );
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://api.blockcypher.com/v1/eth/main/addrs');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		$new_wallet = json_decode((curl_exec($ch)), true);
+
+        $this->savePaymentWallet($orderId, $new_wallet['private'], $new_wallet['public'], $new_wallet['address']);
+
+		return $new_wallet['address'];
+	}
+
+    public function createPaymentWalletWebHook($address) {
+		$postfields = array (
+
+				 'event' => 'confirmed-tx',
+				 'address' => $address,
+				 'url' => 'https://test.etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet='.$address
+				 );
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, 'https://api.blockcypher.com/v1/eth/main/hooks?token=9216e5ed002b4e83a3e8bb54cfd17daf');
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postfields));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+		$new_web_hook = json_decode((curl_exec($ch)), true);
+	}
+
+    public function savePaymentWallet($orderId, $private, $public, $address) {
+        Db::getInstance()->insert('erc20_payment', array(
+        	'order_id'  => pSQL($orderId),
+            'private'		   => pSQL($private),
+            'public'           => pSQL($public),
+            'address'		   => pSQL($address)
+        ));
     }
 }

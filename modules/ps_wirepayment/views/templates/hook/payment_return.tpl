@@ -18,8 +18,59 @@
  *}
 
 {if $status == 'ok'}
+
+
+<div class="row">
+    {block name='pch_discount_payment'}
+      <div id="pch-discount-payment" class="col-md-12">
+        <h3 class="h3 card-title">{l s='Save %s with PCH discount' sprintf=[$amount_erc20_currency] d='Modules.Wirepayment.Shop'}:</h3>
+        <p>
+          {l s='In order to continue you need to send PCH!' d='Modules.Wirepayment.Shop'}<br/>
+          {l s='You can send the PCH to the payment wallet or pay directly over the PCash platform.' d='Modules.Wirepayment.Shop'}
+        </p>
+        <dl>
+            <dt>{l s='Amount' d='Modules.Wirepayment.Shop'}</dt>
+            <dd>{$amount_erc20} ({$amount_erc20_currency})</dd>
+            <dt>{l s='Payment wallet' d='Modules.Wirepayment.Shop'}</dt>
+            <dd><a id="ethereum_address" onclick="copyToClipboard('ethereum_address')" class="copyaddress_link">0x{$wallet}</a></dd>
+            <dt>{l s='QR-Code' d='Modules.Wirepayment.Shop'}</dt>
+            <dd><img width="180" height="180" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x{$wallet}"/></dd>
+            <dt>{l s='Pay with PCH' d='Modules.Wirepayment.Shop'}</dt>
+            <dd><form method="POST" target="_blank" action="https://pcash.world/app/pcashpay/initialize">
+                <input type="hidden" name="eur_amount" value="{$amount_erc20_currency_raw}">
+                <input type="hidden" name="merchant_token" value="a0733ad70d26725ee24360474e7ef537">
+                <input type="hidden" name="cancel_url" value="">
+                <input type="hidden" name="success_url" value="">
+                <input type="hidden" name="callback_url" value="https://test.etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet=0x{$wallet}">
+                <input type="submit" class="button btn btn-success" value="Pay with PCH">
+
+                </form>
+
+            </dd>
+        </dl>
+
+        <script>
+        function copyToClipboard(elementId) {
+
+
+          var aux = document.createElement("input");
+          aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+          document.body.appendChild(aux);
+          aux.select();
+          document.execCommand("copy");
+
+          document.body.removeChild(aux);
+
+        }
+        </script>
+
+      </div>
+    {/block}
+</div>
+
+
     <p>
-      {l s='Your order on %s is complete.' sprintf=[$shop_name] d='Modules.Wirepayment.Shop'}<br/>
+      {l s='After sending the PCH and sending the bank wire your order is complete.' d='Modules.Wirepayment.Shop'}<br/>
       {l s='Please send us a bank wire with:' d='Modules.Wirepayment.Shop'}
     </p>
     {include file='module:ps_wirepayment/views/templates/hook/_partials/payment_infos.tpl'}
