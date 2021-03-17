@@ -293,7 +293,7 @@ class ProductCore extends ObjectModel
     /**
      * custom PCH Discount attribute
      *
-     * @var string
+     * @var float
      */
     public $pch_discount;
 
@@ -393,7 +393,7 @@ class ProductCore extends ObjectModel
             'pack_stock_type' => array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 
             //custom PCH discount attribute
-            'pch_discount' => array('type' => self::TYPE_FLOAT, 'shop' => true),
+            'pch_discount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
 
             /* Lang fields */
             'meta_description' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512),

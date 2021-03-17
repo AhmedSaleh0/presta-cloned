@@ -42,7 +42,7 @@
             <dt>{l s='QR-Code' d='Modules.Wirepayment.Shop'}</dt>
             <dd><img width="180" height="180" src="https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x{$wallet}"/></dd>
             <dt>{l s='Pay with PCH' d='Modules.Wirepayment.Shop'}</dt>
-            <dd><form method="POST" target="_blank" action="https://pcash.world/app/pcashpay/initialize">
+            <dd><form method="GET" target="_blank" action="https://pcash.world/app/pcashpay/initialize">
                 <input type="hidden" name="eur_amount" value="{$amount_erc20_currency_raw}">
                 <input type="hidden" name="merchant_token" value="a0733ad70d26725ee24360474e7ef537">
                 <input type="hidden" name="cancel_url" value="">

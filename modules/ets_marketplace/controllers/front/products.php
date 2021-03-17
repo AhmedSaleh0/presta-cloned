@@ -2281,7 +2281,6 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
 
 		//custom PCH Discount attribute
 		$this->product->pch_discount = (float)Tools::getValue('pch_discount');
-		error_log(Tools::getValue('pch_discount'));
 
         $this->product->price = (float)Tools::getValue('price_excl');
         $this->product->id_tax_rules_group = Tools::getValue('id_tax_rules_group');
