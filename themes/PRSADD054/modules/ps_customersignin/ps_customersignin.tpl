@@ -53,7 +53,7 @@
         <span class="hidden-md-down">{l s='Sign in' d='Shop.Theme.Global'}</span>
       </a>
     {/if}
-    <div class="head-wishlist">
+    <div class="head-wishlist" style="display:none;">
             <a
               class="ap-btn-wishlist dropdown-item"
               href="{url entity='module' name='stfeature' controller='mywishlist'}"
@@ -68,7 +68,7 @@
 
 
 
-     <div class="head-compare">
+     <div class="head-compare" style="display:none;">
       <a
         class="ap-btn-compare dropdown-item"
         href="{url entity='module' name='stfeature' controller='productscompare'}"
