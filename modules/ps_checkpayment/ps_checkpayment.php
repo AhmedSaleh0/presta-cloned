@@ -184,7 +184,7 @@ class Ps_Checkpayment extends PaymentModule
                 $currentProduct = new Product($product['product_id']);
                 $currentDiscount = (float)$currentProduct->pch_discount;
                 $currentTotalPrice = $product['total_price_tax_incl'];
-                $currentPCHDiscount = $currentTotalPrice * ($currentDiscount / 100.0);
+                $currentPCHDiscount = ($currentTotalPrice / ((100 - $currentDiscount) / 100.0)) * ($currentDiscount / 100.0);
                 $total_in_pch_to_pay_for_discount += $currentPCHDiscount;
             }
 
@@ -203,7 +203,7 @@ class Ps_Checkpayment extends PaymentModule
                 ),
                 'amount_erc20_currency_raw' => $total_in_pch_to_pay_for_discount,
                 'total_with_discount' => Tools::displayPrice(
-                    $params['order']->getOrdersTotalPaid() - $total_in_pch_to_pay_for_discount,
+                    $params['order']->getOrdersTotalPaid(),
                     new Currency($params['order']->id_currency),
                     false
                 ),

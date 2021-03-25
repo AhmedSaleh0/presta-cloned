@@ -1883,7 +1883,7 @@ class Stripe_official extends PaymentModule
             $currentProduct = new Product($product['product_id']);
             $currentDiscount = (float)$currentProduct->pch_discount;
             $currentTotalPrice = $product['total_price_tax_incl'];
-            $currentPCHDiscount = $currentTotalPrice * ($currentDiscount / 100.0);
+            $currentPCHDiscount = ($currentTotalPrice / ((100 - $currentDiscount) / 100.0)) * ($currentDiscount / 100.0);
             $total_in_pch_to_pay_for_discount += $currentPCHDiscount;
         }
 
@@ -1904,7 +1904,7 @@ class Stripe_official extends PaymentModule
             ),
             'amount_erc20_currency_raw' => $total_in_pch_to_pay_for_discount,
             'total_with_discount' => Tools::displayPrice(
-                $totalToPaid - $total_in_pch_to_pay_for_discount,
+                $totalToPaid,
                 new Currency($params['order']->id_currency),
                 false
             ),
