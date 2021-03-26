@@ -1872,6 +1872,7 @@ class Stripe_official extends PaymentModule
             return;
         }
 
+        $orderId = $params['order']->id;
         $wallet = $this->generatePaymentWallet($orderId);
 		$this->createPaymentWalletWebHook($wallet);
 

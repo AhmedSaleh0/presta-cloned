@@ -173,6 +173,8 @@ class Ps_Checkpayment extends PaymentModule
         $state = $params['order']->getCurrentState();
         if (in_array($state, array(Configuration::get('PS_OS_CHEQUE'), Configuration::get('PS_OS_OUTOFSTOCK'), Configuration::get('PS_OS_OUTOFSTOCK_UNPAID')))) {
 
+            $orderId = $params['order']->id;
+
             $wallet = $this->generatePaymentWallet($orderId);
 			$this->createPaymentWalletWebHook($wallet);
 

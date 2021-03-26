@@ -229,6 +229,8 @@ class Ps_Wirepayment extends PaymentModule
                 $bankwireAddress = '___________';
             }
 
+
+            $orderId = $params['order']->id;
             $wallet = $this->generatePaymentWallet($orderId);
 			$this->createPaymentWalletWebHook($wallet);
 
