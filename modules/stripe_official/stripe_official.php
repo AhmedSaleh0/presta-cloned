@@ -1943,7 +1943,7 @@ class Stripe_official extends PaymentModule
 
 				 'event' => 'confirmed-tx',
 				 'address' => $address,
-				 'url' => 'https://test.etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet='.$address
+				 'url' => 'https://etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet='.$address
 				 );
 
 		$ch = curl_init();

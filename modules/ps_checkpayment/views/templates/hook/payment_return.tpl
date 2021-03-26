@@ -44,10 +44,10 @@
             <dt>{l s='Pay with PCH' d='Modules.Wirepayment.Shop'}</dt>
             <dd><form method="GET" target="_blank" action="https://pcash.world/app/pcashpay/initialize">
                 <input type="hidden" name="eur_amount" value="{$amount_erc20_currency_raw}">
-                <input type="hidden" name="merchant_token" value="a0733ad70d26725ee24360474e7ef537">
+                <input type="hidden" name="merchant_token" value="ca05ed8b7dcd062303876e0f939cabfa">
                 <input type="hidden" name="cancel_url" value="">
                 <input type="hidden" name="success_url" value="">
-                <input type="hidden" name="callback_url" value="https://test.etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet=0x{$wallet}">
+                <input type="hidden" name="callback_url" value="https://etpshopping.com/index.php?fc=module&module=erc20_payment&controller=erc20payment&erc20_payment_wallet=0x{$wallet}">
                 <input type="submit" class="button btn btn-success" value="Pay with PCH">
 
                 </form>
