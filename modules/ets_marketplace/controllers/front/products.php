@@ -1314,7 +1314,11 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 $valueFieldPost['delivery_out_stock'][$language['id_lang']]=Tools::getValue('delivery_out_stock_'.(int)$language['id_lang']);
         }
         $valueFieldPost['id_tax_rules_group'] = $this->product->id_tax_rules_group;
-        if($this->product->id)
+
+		//custom PCH discount attribute
+		$valueFieldPost['pch_discount'] =$this->product->pch_discount;
+
+		if($this->product->id)
         {
             $valueFieldPost['price_excl'] =$this->product->price;
             $valueFieldPost['price_incl'] =Tools::ps_round($this->product->price +$this->product->price*$this->module->getTaxValue($this->product->id_tax_rules_group),6);
@@ -1441,8 +1445,14 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                         'name' => $this->module->l('Product with combinations','products'),
                     ),
                 )
+            ),
+			array(
+                'type' => 'text',
+                'name' => 'pch_discount',
+                'label' => $this->module->l('PCH Discount','products'),
+				'col' => 'col-lg-6',
+				'suffix' => '%',
             )
-
         );
         if(in_array('short_description',$this->seller_product_information))
             $fields[]= array(
@@ -2051,6 +2061,16 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
             if(Tools::getValue('delivery_out_stock_'.$language['id_lang']) && !Validate::isCleanHtml(Tools::getValue('delivery_out_stock_'.$language['id_lang'])))
                 $this->errors[] = $this->module->l('Time delivery out stock is not valid in','products').' '.$language['iso_code'];
         }
+
+		//custom PCH discount attribute
+		if(trim(Tools::getValue('pch_discount'))==='')
+        {
+            $this->errors[]= $this->module->l('PCH Discount is required','products');
+        }
+        elseif(!Validate::isUnsignedFloat(Tools::getValue('pch_discount')))
+            $this->errors[]= $this->module->l('PCH Discount is not valid','products');
+
+
         if(trim(Tools::getValue('price_excl'))==='')
         {
             $this->errors[]= $this->module->l('Product price is required','products');
@@ -2258,6 +2278,11 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
         {
             $this->product->reference = Tools::getValue('reference');
         }
+
+		//custom PCH Discount attribute
+		$this->product->pch_discount = (float)Tools::getValue('pch_discount');
+
+
         $this->product->price = (float)Tools::getValue('price_excl');
         $this->product->id_tax_rules_group = Tools::getValue('id_tax_rules_group');
         $this->product->width =(float)Tools::getValue('width');
@@ -2348,6 +2373,78 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
 
 
                 }
+
+
+
+
+
+
+
+
+
+
+				$specific = Db::getInstance()->getRow('
+					SELECT sp.*,cul.name as currency_name, col.name as country_name, gl.name as group_name,CONCAT(c.firstname," ",c.lastname) as customer_name FROM `'._DB_PREFIX_.'specific_price` sp
+					LEFT JOIN '._DB_PREFIX_.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'currency_lang':'currency').' cul ON (cul.id_currency= sp.id_currency '.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'AND cul.id_lang="'.(int)$this->context->language->id.'"':'').')
+					LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'")
+					LEFT JOIN `'._DB_PREFIX_.'group_lang` gl ON (gl.id_group=sp.id_group AND gl.id_lang="'.(int)$this->context->language->id.'")
+					LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=sp.id_customer)
+					WHERE sp.id_product='.(int)$this->product->id);
+
+
+				if(!$specific['id_specific_price']) {
+					$specific_price = new SpecificPrice();
+			        $specific_price->id_product = $this->product->id;
+			        $specific_price->id_product_attribute = 0;
+			        $specific_price->id_currency = 0;
+			        $specific_price->id_country = 0;
+			        $specific_price->id_group = 0;
+			        $specific_price->id_customer = 0;
+			        $specific_price->from_quantity = 1;
+			        $specific_price->from = '0000-00-00 00:00:00';
+			        $specific_price->to = '0000-00-00 00:00:00';
+			        $specific_price->id_shop = $this->context->shop->id;
+			        $specific_price->price = -1;
+			        $specific_price->reduction_type= 'percentage';
+			        $specific_price->reduction = $this->product->pch_discount / 100;
+			        $specific_price->reduction_tax = 1;
+					$specific_price->add();
+				} else {
+					$specific_price = new SpecificPrice($specific['id_specific_price']);
+			        $specific_price->id_product = $this->product->id;
+			        $specific_price->id_product_attribute = 0;
+			        $specific_price->id_currency = 0;
+			        $specific_price->id_country = 0;
+			        $specific_price->id_group = 0;
+			        $specific_price->id_customer = 0;
+			        $specific_price->from_quantity = 1;
+			        $specific_price->from = '0000-00-00 00:00:00';
+			        $specific_price->to = '0000-00-00 00:00:00';
+			        $specific_price->id_shop = $this->context->shop->id;
+			        $specific_price->price = -1;
+			        $specific_price->reduction_type= 'percentage';
+			        $specific_price->reduction = $this->product->pch_discount / 100;
+			        $specific_price->reduction_tax = 1;
+					$specific_price->update();
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
         }
         else
@@ -2357,6 +2454,68 @@ class Ets_MarketPlaceProductsModuleFrontController extends ModuleFrontController
                 $this->product->active=(int)Tools::getValue('active');
             }
             $this->product->update();
+
+
+
+
+
+
+
+
+			$specific = Db::getInstance()->getRow('
+				SELECT sp.*,cul.name as currency_name, col.name as country_name, gl.name as group_name,CONCAT(c.firstname," ",c.lastname) as customer_name FROM `'._DB_PREFIX_.'specific_price` sp
+				LEFT JOIN '._DB_PREFIX_.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'currency_lang':'currency').' cul ON (cul.id_currency= sp.id_currency '.(version_compare(_PS_VERSION_, '1.7.6.0', '>=')? 'AND cul.id_lang="'.(int)$this->context->language->id.'"':'').')
+				LEFT JOIN `'._DB_PREFIX_.'country_lang` col ON (col.id_country= sp.id_country AND col.id_lang="'.(int)$this->context->language->id.'")
+				LEFT JOIN `'._DB_PREFIX_.'group_lang` gl ON (gl.id_group=sp.id_group AND gl.id_lang="'.(int)$this->context->language->id.'")
+				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.id_customer=sp.id_customer)
+				WHERE sp.id_product='.(int)$this->product->id);
+
+			error_log($specific['id_specific_price']);
+
+
+			if(!$specific['id_specific_price']) {
+				$specific_price = new SpecificPrice();
+				$specific_price->id_product = $this->product->id;
+				$specific_price->id_product_attribute = 0;
+				$specific_price->id_currency = 0;
+				$specific_price->id_country = 0;
+				$specific_price->id_group = 0;
+				$specific_price->id_customer = 0;
+				$specific_price->from_quantity = 1;
+				$specific_price->from = '0000-00-00 00:00:00';
+				$specific_price->to = '0000-00-00 00:00:00';
+				$specific_price->id_shop = $this->context->shop->id;
+				$specific_price->price = -1;
+				$specific_price->reduction_type= 'percentage';
+				$specific_price->reduction = $this->product->pch_discount / 100;
+				$specific_price->reduction_tax = 1;
+				$specific_price->add();
+			} else {
+				$specific_price = new SpecificPrice($specific['id_specific_price']);
+				$specific_price->id_product = $this->product->id;
+				$specific_price->id_product_attribute = 0;
+				$specific_price->id_currency = 0;
+				$specific_price->id_country = 0;
+				$specific_price->id_group = 0;
+				$specific_price->id_customer = 0;
+				$specific_price->from_quantity = 1;
+				$specific_price->from = '0000-00-00 00:00:00';
+				$specific_price->to = '0000-00-00 00:00:00';
+				$specific_price->id_shop = $this->context->shop->id;
+				$specific_price->price = -1;
+				$specific_price->reduction_type= 'percentage';
+				$specific_price->reduction = $this->product->pch_discount / 100;
+				$specific_price->reduction_tax = 1;
+				$specific_price->update();
+			}
+
+
+
+
+
+
+
+
         }
         if($this->product->id)
         {

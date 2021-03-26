@@ -50,8 +50,8 @@
   <file original="modules/ps_checkpayment/views/templates/hook/payment_return.tpl" source-language="en" target-language="de" datatype="plaintext">
     <body>
       <trans-unit id="88526efe38fd18179a127024aba8c1d7" approved="yes">
-        <source>Your order on %s is complete.</source>
-        <target state="final">Ihre Bestellung auf %s ist abgeschlossen.</target>
+        <source>After sending the PCH and sending check your order is complete.</source>
+        <target state="final">Nachdem Sie die PCH und den Scheck gesendet haben, ist die Bestellung vollständig.</target>
         <note>Line: 27</note>
       </trans-unit>
       <trans-unit id="61da27a5dd1f8ced46c77b0feaa9e159" approved="yes">

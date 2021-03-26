@@ -83,8 +83,24 @@ class ValidateOrder
 
         // @todo To be refactored in v2.0.0 with Service Container
         if (true === empty($order['purchase_units'][0]['payments']['captures'])) {
+            /** @var \Ps_checkout $module */
+            $module = \Module::getInstanceByName('ps_checkout');
+
+            /** @var \PrestaShop\Module\PrestashopCheckout\FundingSource\FundingSourceTranslationProvider $fundingSourceTranslationProvider */
+            $fundingSourceTranslationProvider = $module->getService('ps_checkout.funding_source.translation');
+
+            /** @var \PrestaShop\Module\PrestashopCheckout\Repository\PsCheckoutCartRepository $psCheckoutCartRepository */
+            $psCheckoutCartRepository = $module->getService('ps_checkout.repository.pscheckoutcart');
+
+            /** @var \PsCheckoutCart|false $psCheckoutCart */
+            $psCheckoutCart = $psCheckoutCartRepository->findOneByCartId((int) $payload['cartId']);
+
             $apiOrder = new Order(\Context::getContext()->link);
-            $response = $apiOrder->capture($order['id'], $this->merchantId); // API call here
+            $response = $apiOrder->capture(
+                $order['id'],
+                $this->merchantId,
+                false === $psCheckoutCart ? 'paypal' : $psCheckoutCart->paypal_funding
+            ); // API call here
 
             if (false === $response['status']) {
                 if (false === empty($response['body']['message'])) {
@@ -118,18 +134,6 @@ class ValidateOrder
                 }
             }
 
-            /** @var \Ps_checkout $module */
-            $module = \Module::getInstanceByName('ps_checkout');
-
-            /** @var \PrestaShop\Module\PrestashopCheckout\FundingSourceProvider $fundingSourceProvider */
-            $fundingSourceProvider = $module->getService('ps_checkout.provider.funding_source');
-
-            /** @var \PrestaShop\Module\PrestashopCheckout\Repository\PsCheckoutCartRepository $psCheckoutCartRepository */
-            $psCheckoutCartRepository = $module->getService('ps_checkout.repository.pscheckoutcart');
-
-            /** @var \PsCheckoutCart|false $psCheckoutCart */
-            $psCheckoutCart = $psCheckoutCartRepository->findOneByCartId((int) $payload['cartId']);
-
             if (false === $psCheckoutCart) {
                 $psCheckoutCart = new \PsCheckoutCart();
                 $psCheckoutCart->id_cart = (int) $payload['cartId'];
@@ -153,7 +157,7 @@ class ValidateOrder
                     $payload['cartId'],
                     (int) $this->getOrderState($psCheckoutCart->paypal_funding),
                     $payload['amount'],
-                    $fundingSourceProvider->getPaymentMethodName($psCheckoutCart->paypal_funding),
+                    $fundingSourceTranslationProvider->getPaymentMethodName($psCheckoutCart->paypal_funding),
                     null,
                     [
                         'transaction_id' => $transactionIdentifier,
@@ -207,7 +211,7 @@ class ValidateOrder
 
                         if (false !== $orderPayment) {
                             $orderPayment->transaction_id = $transactionIdentifier;
-                            $orderPayment->payment_method = $fundingSourceProvider->getPaymentMethodName($psCheckoutCart->paypal_funding);
+                            $orderPayment->payment_method = $fundingSourceTranslationProvider->getPaymentMethodName($psCheckoutCart->paypal_funding);
                             try {
                                 $orderPayment->save();
                             } catch (\Exception $exception) {

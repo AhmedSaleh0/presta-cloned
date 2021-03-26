@@ -11,12 +11,24 @@
  * DELETE api/marketplace/products/{id_product}
  * GET api/marketplace/categories/
  * GET api/marketplace/categories/{id_category}
- * DELETE api/marketplace/categories/
+ * DELETE api/marketplace/categories/{id_category}
  */
+
+require_once('../../../../config/config.inc.php');
 
 if(!defined('_PS_VERSION_')) exit;
 
-require_once('../modules/ets_marketplace/ets_marketplace.php');
+if (isset($_SERVER['PHP_AUTH_USER'])) {
+    $key = $_SERVER['PHP_AUTH_USER'];
+} elseif (isset($_GET['ws_key'])) {
+    $key = $_GET['ws_key'];
+} else {
+    header($_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized');
+    header('WWW-Authenticate: Basic realm="Welcome to PrestaShop Webservice, please enter the authentication key as the login. No password required."');
+    die('401 Unauthorized');
+}
+
+require_once('../../../../modules/ets_marketplace/ets_marketplace.php');
 
 $available_methods = array('shops','products','categories');
 $urlSegment = explode("/",$_SERVER['REQUEST_URI']);
@@ -33,21 +45,16 @@ if (!$method) {
 if (!in_array($method,$available_methods)) header('HTTP/1.0 405 Method Not Allowed');
 
 $ws_account_description = Db::getInstance()->getValue('SELECT description FROM `'._DB_PREFIX_.'webservice_account` WHERE `key`="'.$_SERVER['PHP_AUTH_USER'].'"');
-if (!$ws_account_description or !preg_match("/shop:\d+/", $ws_account_description)) {
-
+if (!$ws_account_description or !preg_match("/shop:\d+/", $ws_account_description))
+{
 	header('HTTP/1.0 403 Forbidden');
 	die('Marketplace API Error! Seller Not defined');
-
 }
 
 preg_match('/shop:(\d+)/', $ws_account_description, $matches, PREG_OFFSET_CAPTURE, 0);
 $id_shop = $matches[1][0];
 $seller = new Ets_mp_seller($id_shop);
 
-// $seller = Ets_mp_seller::_getSellerByIdCustomer($id_customer);
-// $seller = Ets_mp_seller::_getSellers(' AND s.shop='.$id_shop,);
-// var_dump($seller);
-// die();
 
 $errors = array();
 
@@ -285,113 +292,6 @@ if ($method=='categories') {
             header('Content-Type: application/json;charset=UTF-8');
 			echo json_encode($objects);
 
-            break;
-
-        case 'POST':
-
-        	#require_once('../modules/ets_marketplace/classes/updateProducts.php');
-
-	        $input = file_get_contents('php://input');
-
-			/* input data in JSON file format:
-			[
-
-	        ]
-			*/
-
-			$input_data = json_decode($input, TRUE);
-
-			foreach ($input_data as $data) {
-
-	        	$updateProducts = new UpdateProducts($seller, $data);
-
-				$result = $updateProducts->addProduct($data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price);
-
-				if ($result["error"]!='') {
-
-					$errors[] = $result["error"];
-
-				}
-			}
-
-			if ($result and count($errors)==0) {
-
-	            header('HTTP/1.0 201 Created');
-	            #\Location: /:entity/:new_id
-	   			// header('Content-Type: application/json;charset=UTF-8');
-				// echo json_encode(array('method' => 'POST',
-				// 		           	   'success' => $result,
-				// 		        		));
-			}
-			else
-			{
-
-			    header('HTTP/1.0 400 Bad Request');
-			    echo json_encode(array(
-			        'error' => 'Add Products Error',
-			        'message' => implode(" ",$errors)
-			    ));
-			}
-
-            break;
-
-        case 'PUT':
-
-        	if ($id)
-        	{
-        		#require_once('../modules/ets_marketplace/classes/updateProducts.php');
-
-        		$input = file_get_contents('php://input');
-
-				$input_data = json_decode($input, TRUE);
-
-				foreach ($input_data as $data) {
-
-		        	$updateProducts = new UpdateProducts($seller, $data);
-
-					$result = $updateProducts->updateProduct($id,$data,$col_name,$col_link_rewrite,$col_image,$col_quantity,$col_price,$col_category,$col_default_category,$col_combination,$col_description,$col_description_short,$col_specific_price);
-
-					if ($result["error"]!='') {
-
-						$errors[] = $result["error"];
-
-					}
-
-				}
-
-				if ($result and count($errors)==0) {
-
-		            header('HTTP/1.0 200 Ok');
-		            #\Location: /:entity/:new_id
-		   			// header('Content-Type: application/json;charset=UTF-8');
-					// echo json_encode(array('method' => 'POST',
-					// 		           	   'success' => $result,
-					// 		        		));
-				}
-				else
-				{
-
-				    header('HTTP/1.0 400 Bad Request');
-				    echo json_encode(array(
-				        'error' => 'Add Products Error',
-				        'message' => implode(" ",$errors)
-				    ));
-				}
-
-
-        	}
-
-			else
-
-			{
-			    header('HTTP/1.0 400 Bad Request');
-			    echo json_encode(array(
-			        'error' => 'Update Product Error',
-			        'message' => 'Product ID required'
-			    ));
-			}
-
-            #header('HTTP/1.0 405 Method Not Allowed');
             break;
 
         case 'DELETE':

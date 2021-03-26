@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da
+class ComposerStaticInita172d5ac7f6b731c45b77770e5f85ca2
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -505,7 +505,16 @@ class ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da
         'PrestaShop\\Module\\PrestashopCheckout\\ExpressCheckout\\ExpressCheckout' => __DIR__ . '/../..' . '/src/ExpressCheckout/ExpressCheckout.php',
         'PrestaShop\\Module\\PrestashopCheckout\\ExpressCheckout\\ExpressCheckoutConfiguration' => __DIR__ . '/../..' . '/src/ExpressCheckout/ExpressCheckoutConfiguration.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Faq\\Faq' => __DIR__ . '/../..' . '/src/Faq/Faq.php',
-        'PrestaShop\\Module\\PrestashopCheckout\\FundingSourceProvider' => __DIR__ . '/../..' . '/src/FundingSourceProvider.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSource' => __DIR__ . '/../..' . '/src/FundingSource/FundingSource.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceCollection' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceCollection.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceCollectionBuilder' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceCollectionBuilder.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceConfiguration' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceConfiguration.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceConfigurationRepository' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceConfigurationRepository.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceEligibilityConstraint' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceEligibilityConstraint.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceEntity' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceEntity.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourcePresenter' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourcePresenter.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceProvider' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceProvider.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\FundingSource\\FundingSourceTranslationProvider' => __DIR__ . '/../..' . '/src/FundingSource/FundingSourceTranslationProvider.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Handler\\CreatePaypalOrderHandler' => __DIR__ . '/../..' . '/src/Handler/CreatePaypalOrderHandler.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Handler\\Response\\ResponseApiHandler' => __DIR__ . '/../..' . '/src/Handler/Response/ResponseApiHandler.php',
         'PrestaShop\\Module\\PrestashopCheckout\\HostedFieldsErrors' => __DIR__ . '/../..' . '/src/HostedFieldsErrors.php',
@@ -543,8 +552,10 @@ class ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da
         'PrestaShop\\Module\\PrestashopCheckout\\PsxData\\PsxDataPrepare' => __DIR__ . '/../..' . '/src/PsxData/PsxDataPrepare.php',
         'PrestaShop\\Module\\PrestashopCheckout\\PsxData\\PsxDataValidation' => __DIR__ . '/../..' . '/src/PsxData/PsxDataValidation.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Refund' => __DIR__ . '/../..' . '/src/Refund.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\Repository\\CountryRepository' => __DIR__ . '/../..' . '/src/Repository/CountryRepository.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Repository\\OrderPaymentRepository' => __DIR__ . '/../..' . '/src/Repository/OrderPaymentRepository.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Repository\\OrderRepository' => __DIR__ . '/../..' . '/src/Repository/OrderRepository.php',
+        'PrestaShop\\Module\\PrestashopCheckout\\Repository\\PayPalCodeRepository' => __DIR__ . '/../..' . '/src/Repository/PayPalCodeRepository.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Repository\\PaypalAccountRepository' => __DIR__ . '/../..' . '/src/Repository/PaypalAccountRepository.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Repository\\PsAccountRepository' => __DIR__ . '/../..' . '/src/Repository/PsAccountRepository.php',
         'PrestaShop\\Module\\PrestashopCheckout\\Repository\\PsCheckoutCartRepository' => __DIR__ . '/../..' . '/src/Repository/PsCheckoutCartRepository.php',
@@ -1037,10 +1048,10 @@ class ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit461b8f5bd492d4fb4c93243e90fc97da::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita172d5ac7f6b731c45b77770e5f85ca2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita172d5ac7f6b731c45b77770e5f85ca2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInita172d5ac7f6b731c45b77770e5f85ca2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInita172d5ac7f6b731c45b77770e5f85ca2::$classMap;
 
         }, null, ClassLoader::class);
     }

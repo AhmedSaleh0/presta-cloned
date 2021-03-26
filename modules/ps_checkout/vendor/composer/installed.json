@@ -1834,5 +1834,6 @@
             "install-path": "../webmozart/assert"
         }
     ],
-    "dev": false
+    "dev": false,
+    "dev-package-names": []
 }
