@@ -566,6 +566,32 @@ class PaymentModule extends PaymentModuleCore
                                 false,
                                 (int) $order->id_shop
                             );
+
+                     
+                            Mail::Send(
+                                (int) $order->id_lang, // defaut language id
+                                'pcash_payment', // email template file to be use
+                                ' pcash payment', // email subject
+                                // array(
+                                //     '{email}' => Configuration::get('PS_SHOP_EMAIL'), // sender email address
+                                //     '{message}' => 'Hello world' // email content
+                                // ),
+                                $data,
+                                $this->context->customer->email, // receiver email address
+                                $this->context->customer->firstname . ' ' . $this->context->customer->lastname, //receiver name
+                                NULL, //from email address
+                                NULL,  //from name
+                                NULL, //file attachment
+                                NULL, //mode smtp
+                                _PS_MAIL_DIR_,
+                                false,
+                                (int) $order->id_shop
+                            );
+
+
+
+
+
                         }
                     }
                     if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
