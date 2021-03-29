@@ -467,12 +467,22 @@ class PaymentModule extends PaymentModuleCore
                     }
                     unset($order_detail);
                     $order = new Order((int) $order->id);
+                     $theid = 2;
+                    // $wallet =Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'erc20_payment where id=2`');
+                    $wallet = Db::getInstance()->getValue('
+                    SELECT address
+                    FROM `' . _DB_PREFIX_ .'erc20_payment`
+                    WHERE `order_id` = ' . (int) $order->id);
+
+
                     if ($id_order_state != Configuration::get('PS_OS_ERROR') && $id_order_state != Configuration::get('PS_OS_CANCELED') && $this->context->customer->id) {
                         $invoice = new Address((int) $order->id_address_invoice);
                         $delivery = new Address((int) $order->id_address_delivery);
                         $delivery_state = $delivery->id_state ? new State((int) $delivery->id_state) : false;
                         $invoice_state = $invoice->id_state ? new State((int) $invoice->id_state) : false;
                         $carrier = $order->id_carrier ? new Carrier($order->id_carrier) : false;
+                        $pch = number_format($order->total_paid / 0.16, 2);
+                        $eur = number_format($order->total_paid, 2);
                         $data = array(
                             '{firstname}' => $this->context->customer->firstname,
                             '{lastname}' => $this->context->customer->lastname,
@@ -526,6 +536,9 @@ class PaymentModule extends PaymentModuleCore
                             '{total_shipping_tax_incl}' => Tools::displayPrice($order->total_shipping_tax_incl, $this->context->currency, false),
                             '{total_wrapping}' => Tools::displayPrice($order->total_wrapping, $this->context->currency, false),
                             '{total_tax_paid}' => Tools::displayPrice(($order->total_products_wt - $order->total_products) + ($order->total_shipping_tax_incl - $order->total_shipping_tax_excl), $this->context->currency, false),
+                            '{wallet}' => $wallet,
+                            '{pch_amount}' => $pch,
+                            '{eur_amount}' => $eur,
                         );
                         if (is_array($extra_vars)) {
                             $data = array_merge($data, $extra_vars);
