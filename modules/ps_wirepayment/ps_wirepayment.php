@@ -242,7 +242,12 @@ class Ps_Wirepayment extends PaymentModule
                 $currentProduct = new Product($product['product_id']);
                 $currentDiscount = (float)$currentProduct->pch_discount;
                 $currentTotalPrice = $product['total_price_tax_incl'];
-                $currentPCHDiscount = ($currentTotalPrice / ((100 - $currentDiscount) / 100.0)) * ($currentDiscount / 100.0);
+                if($currentDiscount == 100.0 ) {
+                    $currentPCHDiscount = $product['original_product_price'];
+                } else {
+                    $currentPCHDiscount = ($currentTotalPrice / ((100 - $currentDiscount) / 100.0)) * ($currentDiscount / 100.0);
+                }
+
                 $total_in_pch_to_pay_for_discount += $currentPCHDiscount;
             }
 

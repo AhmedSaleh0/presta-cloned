@@ -18,13 +18,13 @@
 *  @license    Valid for 1 website (or project) for each purchase of license
 *  International Registered Trademark & Property of ETS-Soft
 *}
-{if !$require_registration || ($registration && $registration->active==1)||$seller} 
+{if !$require_registration || ($registration && $registration->active==1)||$seller}
     {if !$is17}
         <li class="ets_mp-box">
     {/if}
 	<a id="ets_mp_registration-link" href="{$link->getModuleLink('ets_marketplace','myseller')|escape:'html':'UTF-8'}" class="{if isset($is17) && $is17}col-lg-4 col-md-6 col-sm-6 col-xs-12{/if}">
-        <span class="link-item">
-            <i class="mp-seller-icons"></i>
+        <span class="link-item" style="background-color: #3b5998;color:white">
+            <i class="mp-seller-icons" style="color:white;"></i>
               {if $seller}{l s='My seller account' mod='ets_marketplace'}{else}{l s='My seller account' mod='ets_marketplace'}{/if}
         </span>
 	</a>
@@ -36,8 +36,8 @@
         <li class="ets_mp-box">
     {/if}
 	<a id="ets_mp_registration-link" href="{$link->getModuleLink('ets_marketplace','registration')|escape:'html':'UTF-8'}" class="{if isset($is17) && $is17}col-lg-4 col-md-6 col-sm-6 col-xs-12{/if}">
-        <span class="link-item">
-            <i class="mp-registration-icons"></i>
+        <span class="link-item" style="background-color: #3b5998;color:white">
+            <i class="mp-registration-icons" style="color:white;"></i>
               {l s='My seller account' mod='ets_marketplace'}
         </span>
 	</a>
@@ -51,7 +51,7 @@
     <a id="ets_mp_messages-link" href="{$link->getModuleLink('ets_marketplace','contactseller')|escape:'html':'UTF-8'}" class="{if isset($is17) && $is17}col-lg-4 col-md-6 col-sm-6 col-xs-12{/if}">
         <span class="link-item">
             <i class="fa fa-comments"></i>
-            {l s='Contact shop' mod='ets_marketplace'}  
+            {l s='Contact shop' mod='ets_marketplace'}
         </span>
     </a>
 {if !$is17}
